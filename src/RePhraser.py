@@ -23,8 +23,6 @@ basedir = os.path.dirname(__file__)
 
 class MainWindow(QMainWindow):
 
-    # def initializeUI(self):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
