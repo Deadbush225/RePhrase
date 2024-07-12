@@ -1,5 +1,7 @@
 QMenuBar {
-    background-color: #f3f3f3;
+    /* background-color: #f3f3f3;*/
+    background-color: #24273a;
+    color: white;
 }
 
 QStatusBar {
@@ -17,8 +19,8 @@ QToolBar {
 
 QToolButton {
     padding: 2px;
-    /* margin: 5px; */
-    border-radius: 5px;
+    /* margin: 5px; 
+    border-radius: 5px;*/
 }
 
 QToolButton::hover {
@@ -35,7 +37,6 @@ QToolButton::on {
     background-color: #24273a;
     color: #c5cff5;
     border: 1px solid #c6a0f6;
-    border-radius: 5px;
     padding: 10px 10px 10px 10px;
 }
 
@@ -50,6 +51,7 @@ QScrollBar::handle:vertical {
     min-height: 0px;
     border: 0px solid red;
     background-color: #44485f;
+    width: 4px;
     /*border-radius: 4px;*/
 }
 
@@ -82,8 +84,8 @@ QDockWidget::title {
     padding-left: 5px;
 
     
-    /* border-bottom-right-radius: 10px; */
-    border-bottom-left-radius: 10px;
+    /* border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;*/
 }
 
 QDockWidget::close-button, QDockWidget::float-button {
@@ -103,3 +105,13 @@ QDockWidget::float-button {
 QDockWidget::close-button:pressed, QDockWidget::float-button:pressed {
     padding: 1px -1px -1px 1px;
 } */
+
+QTableWidget {
+    background-color: #EEEEEE;
+    border: 1px solid;
+    border: 1px solid #c6a0f6;
+}
+
+QMainWindow {
+   background: #24273a;
+}

@@ -214,7 +214,11 @@ class TextEdit(QTextEdit):
 
         # return
 
-    def s_setCharFormat(self):
+    def setCharFormatSelection(self):
+        print("SET CHAR FORMAT SELECTION")
+        print(self.textCharFormat.fontWeight())
+        print(self.textCharFormat.fontItalic())
+
         self.textCursor().setCharFormat(self.textCharFormat)
 
     def removeCharFormatSelection(self):
@@ -300,6 +304,7 @@ class AuthorTable(QTableWidget):
 
         self.setColumnCount(2)
         self.setHorizontalHeaderLabels(["Author", "Signature"])
+        self.verticalHeader().hide()
         # self.author_dictionary = author_dictionary
 
         if not self.author_dictionary:

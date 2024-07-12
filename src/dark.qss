@@ -1,0 +1,56 @@
+QScrollBar:vertical {
+    border: 0px solid #999999;
+    background: #232323;
+    width: 4px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    min-height: 0px;
+    border: 0px solid red;
+    background-color: #44485f;
+    width: 4px;
+    /*border-radius: 4px;*/
+}
+
+QScrollBar::add-line:vertical {
+    height: 0px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:vertical {
+    height: 0 px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+
+QDockWidget {
+    /* border: 1px solid lightgray; */
+    /* titlebar-close-icon: url(close.png);
+    titlebar-normal-icon: url(undock.png); */
+    titlebar-close-icon: url(src/images/close.svg);
+    titlebar-normal-icon: url(src/images/minimize.svg);
+}
+
+QDockWidget::title {
+    text-align: left; /* align the text to the left */
+    /* border-radius: 5px; */
+
+    padding-left: 5px;
+
+    
+    /* border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;*/
+}
+
+QDockWidget::close-button, QDockWidget::float-button {
+    /* padding: 0px; */
+    icon-size: 24px;
+    height: 24px;
+}
+
+QDockWidget::float-button {
+    /* padding-left: 1px; */
+}

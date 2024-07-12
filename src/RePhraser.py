@@ -8,6 +8,11 @@ import sys
 import uuid
 import math
 
+import qdarktheme
+
+# Enable HiDPI.
+# qdarktheme.enable_hi_dpi()
+
 # from zipfile import ZipFile
 
 from subclass import *
@@ -27,6 +32,7 @@ class MainWindow(QMainWindow):
         super().__init__(*args, **kwargs)
 
         layout = QVBoxLayout()
+
         self.editor = TextEdit()
         self.editor.setVerticalScrollBar(ScrollBar(Qt.Vertical))
         # Setup the QTextEdit editor configuration
@@ -37,6 +43,8 @@ class MainWindow(QMainWindow):
         self.path = None
 
         layout.addWidget(self.editor)
+        layout.setSpacing(0)
+        layout.setContentsMargins(5, 5, 5, 5)
 
         container = QWidget()
         container.setLayout(layout)
@@ -355,7 +363,7 @@ class MainWindow(QMainWindow):
 
         self.refresh_btn = QPushButton("Refresh stylesheet")
         self.refresh_btn.clicked.connect(self.refresh_stylesheet)
-        layout.addWidget(self.refresh_btn)
+        dock_layout.addWidget(self.refresh_btn)
 
         # Initialize.
         self.update_format()
@@ -397,9 +405,7 @@ class MainWindow(QMainWindow):
         self.editor.setCharFormatSelection()
 
     def refresh_stylesheet(self):
-        qApp.setStyleSheet(
-            "".join(open(os.path.join(basedir, "login.qss")).readlines())
-        )
+        qApp.setStyleSheet("".join(open(os.path.join(basedir, "dark.qss")).readlines()))
 
     def block_signals(self, objects, b):
         # print(objects)
@@ -540,25 +546,36 @@ if __name__ == "__main__":
 
     try:
         app = QApplication(sys.argv)
+
+        # qdarktheme.setup_theme("auto")
+
         # app.setApplicationName("Megasolid Idiom")
         # # setup stylesheet
         # app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
 
-        # palette = QPalette()
-        # palette.setColor(QPalette.Window, QColor(53, 53, 53))
-        # palette.setColor(QPalette.WindowText, Qt.white)
-        # palette.setColor(QPalette.Base, QColor(25, 25, 25))
-        # palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
-        # palette.setColor(QPalette.ToolTipBase, Qt.black)
-        # palette.setColor(QPalette.ToolTipText, Qt.white)
-        # palette.setColor(QPalette.Text, Qt.white)
-        # palette.setColor(QPalette.Button, QColor(53, 53, 53))
-        # palette.setColor(QPalette.ButtonText, Qt.white)
-        # palette.setColor(QPalette.BrightText, Qt.red)
-        # palette.setColor(QPalette.Link, QColor(42, 130, 218))
-        # palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-        # palette.setColor(QPalette.HighlightedText, Qt.black)
-        # app.setPalette(palette)
+        QApplication.setStyle("Fusion")
+        #
+        # # Now use a palette to switch to dark colors:
+        dark_palette = QPalette()
+        dark_palette.setColor(QPalette.Window, QColor(53, 53, 53))
+        dark_palette.setColor(QPalette.WindowText, Qt.white)
+        dark_palette.setColor(QPalette.Base, QColor(35, 35, 35))
+        dark_palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
+        dark_palette.setColor(QPalette.ToolTipBase, QColor(25, 25, 25))
+        dark_palette.setColor(QPalette.ToolTipText, Qt.white)
+        dark_palette.setColor(QPalette.Text, Qt.white)
+        dark_palette.setColor(QPalette.Button, QColor(53, 53, 53))
+        dark_palette.setColor(QPalette.ButtonText, Qt.white)
+        dark_palette.setColor(QPalette.BrightText, Qt.red)
+        dark_palette.setColor(QPalette.Link, QColor(42, 130, 218))
+        dark_palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
+        dark_palette.setColor(QPalette.HighlightedText, QColor(35, 35, 35))
+        dark_palette.setColor(QPalette.Active, QPalette.Button, QColor(53, 53, 53))
+        dark_palette.setColor(QPalette.Disabled, QPalette.ButtonText, Qt.darkGray)
+        dark_palette.setColor(QPalette.Disabled, QPalette.WindowText, Qt.darkGray)
+        dark_palette.setColor(QPalette.Disabled, QPalette.Text, Qt.darkGray)
+        dark_palette.setColor(QPalette.Disabled, QPalette.Light, QColor(53, 53, 53))
+        QApplication.setPalette(dark_palette)
 
         # apply_stylesheet(app, theme='dark_teal.xml')
 
@@ -568,8 +585,8 @@ if __name__ == "__main__":
         # qdarktheme.stop_sync()
 
         # app.setStyleSheet(Path("login.qss").read_text())
-        app.setStyleSheet("".join(open(os.path.join(basedir, "login.qss")).readlines()))
-        app.setWindowIcon(QIcon(os.path.join(basedir, "RePhraser.ico")))
+        app.setStyleSheet("".join(open(os.path.join(basedir, "dark.qss")).readlines()))
+        # app.setWindowIcon(QIcon(os.path.join(basedir, "RePhraser.ico")))
 
         window = MainWindow()
         # window = QMainWindow()
