@@ -8,12 +8,7 @@ import sys
 import uuid
 import math
 
-import qdarktheme
-
 import re
-
-# Enable HiDPI.
-# qdarktheme.enable_hi_dpi()
 
 # from zipfile import ZipFile
 
@@ -26,28 +21,6 @@ IMAGE_EXTENSIONS = [".jpg", ".png", ".bmp"]
 HTML_EXTENSIONS = [".htm", ".html"]
 
 basedir = os.path.dirname(__file__)
-
-
-# def embedStyles(html: str):
-
-#     style_pattern = re.compile(r"(<style.*>)([\s\S]*)(<\/style>)")
-
-#     fromFileStyle = style_pattern.search(html)
-
-#     add_style = r"span {position: relative; z-index: 10}"
-
-#     if add_style not in fromFileStyle.string:
-#         style = (
-#             fromFileStyle.group(1)
-#             # + fromFileStyle.group(2)
-#             + add_style
-#             + fromFileStyle.group(3)
-#         )
-#         html = style_pattern.sub(style, html)
-
-#     print(html)
-
-#     return html
 
 
 class MainWindow(QMainWindow):

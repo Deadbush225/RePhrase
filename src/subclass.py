@@ -224,6 +224,23 @@ class TextEdit(QTextEdit):
 
         # self.textCharFormat.setFontWeight(100)
 
+        # text = self.textCursor().selection().toPlainText()
+
+        # style = ""
+
+        # if self.textCharFormat.fontWeight() != self.defaultCharFormat.fontWeight():
+        #     style += f"font-weight:{self.textCharFormat.fontWeight() * 8};"
+        # if self.textCharFormat.fontItalic() != self.defaultCharFormat.fontItalic():
+        #     style += f"font-style:italic;margin-right:5px;"
+        # if self.textCharFormat.background() != self.defaultCharFormat.background():
+        #     style += f"background-color:{self.textCharFormat.background().color().name(QColor.HexArgb)};"
+        # if self.textCharFormat.foreground() != self.defaultCharFormat.foreground():
+        #     style += f"color:{self.textCharFormat.foreground().color().name(QColor.HexArgb)};"
+
+        # content = f'<span style="{style}">{text}</span>'
+
+        # self.textCursor().insertHtml(content)
+
         self.textCursor().setCharFormat(self.textCharFormat)
 
     def removeCharFormatSelection(self):
@@ -419,7 +436,7 @@ class AuthorTable(QTableWidget):
         self.weight_spinbox = QSpinBox()
         self.weight_spinbox.setMinimum(0)
         self.weight_spinbox.setMaximum(100)
-        self.weight_spinbox.setSingleStep(10)
+        self.weight_spinbox.setSingleStep(1000)
         self.weight_spinbox.setValue(weight)
         weight_cont.addWidget(self.weight_spinbox)
 
