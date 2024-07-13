@@ -92,10 +92,10 @@ class TextEdit(QTextEdit):
         # self.textCharFormat.setFontItalic(True)
 
         # self.textCharFormat.setBackground(Qt.red)
-        self.textCharFormat.setFontWeight(75)
+        # self.textCharFormat.setFontWeight(75)
 
         self.defaultCharFormat = QTextCharFormat()
-        self.defaultCharFormat.setFontWeight(100)
+        # self.defaultCharFormat.setFontWeight(100)
 
         self.images = {}
         self.DPM = floor(1 * 39.37)
@@ -207,9 +207,9 @@ class TextEdit(QTextEdit):
         #     self.textCursor().deleteChar()
         #     return
 
-        if e.text().isalnum():
+        if e.text().isalnum() or (e.text() == " "):
             print("ALPHANUMERIC")
-            self.textCursor().insertText(e.text(), self.textCharFormat)
+            self.textCursor().insertText(e.text(), self.defaultCharFormat)
             return
         # else:
 
@@ -221,6 +221,8 @@ class TextEdit(QTextEdit):
         print("SET CHAR FORMAT SELECTION")
         print(self.textCharFormat.fontWeight())
         print(self.textCharFormat.fontItalic())
+
+        # self.textCharFormat.setFontWeight(100)
 
         self.textCursor().setCharFormat(self.textCharFormat)
 
@@ -314,25 +316,25 @@ class AuthorTable(QTableWidget):
             self.author_dictionary = {
                 "Ai": {
                     "italic": False,
-                    "weight": 800,
+                    "weight": 0,
                     "foreground": "#fc3737",
                     "background": "#fc6f37",
                 },
                 "ChatGPT": {
                     "italic": False,
-                    "weight": 1200,
+                    "weight": 100,
                     "foreground": "#3772fc",
                     "background": "#53D85A",
                 },
                 "Rhixie": {
                     "italic": True,
-                    "weight": 700,
+                    "weight": 0,
                     "foreground": "#fcdb37",
                     "background": "#9037fc",
                 },
             }
 
-        print(self.author_dictionary)
+        # print(self.author_dictionary)
         keys = self.author_dictionary.keys()
         for author_name in keys:
             if not author_name in self.author_dictionary:
@@ -415,9 +417,9 @@ class AuthorTable(QTableWidget):
         weight_cont = QHBoxLayout()
         weight_cont.addWidget(QLabel("Weight: "))
         self.weight_spinbox = QSpinBox()
-        self.weight_spinbox.setMinimum(100)
-        self.weight_spinbox.setMaximum(1200)
-        self.weight_spinbox.setSingleStep(100)
+        self.weight_spinbox.setMinimum(0)
+        self.weight_spinbox.setMaximum(100)
+        self.weight_spinbox.setSingleStep(10)
         self.weight_spinbox.setValue(weight)
         weight_cont.addWidget(self.weight_spinbox)
 
@@ -485,14 +487,18 @@ class AuthorTable(QTableWidget):
             # row is defined which means it is overriden
             # replace old name with new
             old_name = self.item(self.selectedRows()[0], 0).text()
-            self.author_dictionary = {
-                (key if key != old_name else author_name): value
-                for (key, value) in self.author_dictionary.items()
-            }
+            # self.author_dictionary = {
+            #     (key if key != old_name else author_name): value
+            #     for (key, value) in self.author_dictionary.items()
+            # }
+            self.author_dictionary[old_name] = prop
 
+        print("PROP")
+        print(prop)
         print(self.author_dictionary)
+
         self.saveSettings()
-        print(self.settings.value("authors"))
+        # print(self.settings.value("authors"))
 
         # if author_name in self.author_dictionary:
         #     # self.reDrawRow(author_name)

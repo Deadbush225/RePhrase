@@ -54,3 +54,4 @@ QDockWidget::close-button, QDockWidget::float-button {
 QDockWidget::float-button {
     /* padding-left: 1px; */
 }
+

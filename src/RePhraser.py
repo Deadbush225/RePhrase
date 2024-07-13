@@ -10,6 +10,8 @@ import math
 
 import qdarktheme
 
+import re
+
 # Enable HiDPI.
 # qdarktheme.enable_hi_dpi()
 
@@ -24,6 +26,28 @@ IMAGE_EXTENSIONS = [".jpg", ".png", ".bmp"]
 HTML_EXTENSIONS = [".htm", ".html"]
 
 basedir = os.path.dirname(__file__)
+
+
+# def embedStyles(html: str):
+
+#     style_pattern = re.compile(r"(<style.*>)([\s\S]*)(<\/style>)")
+
+#     fromFileStyle = style_pattern.search(html)
+
+#     add_style = r"span {position: relative; z-index: 10}"
+
+#     if add_style not in fromFileStyle.string:
+#         style = (
+#             fromFileStyle.group(1)
+#             # + fromFileStyle.group(2)
+#             + add_style
+#             + fromFileStyle.group(3)
+#         )
+#         html = style_pattern.sub(style, html)
+
+#     print(html)
+
+#     return html
 
 
 class MainWindow(QMainWindow):
@@ -489,6 +513,11 @@ class MainWindow(QMainWindow):
         else:
             self.path = path
             # Qt will automatically try and guess the format as txt/html
+
+            self.editor.document().setDefaultStyleSheet(r"{}")
+
+            print(self.editor.document().defaultStyleSheet())
+
             self.editor.setHtml(text)
             self.update_title()
 
