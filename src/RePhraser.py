@@ -35,6 +35,17 @@ class MainWindow(QMainWindow):
 
         self.editor = TextEdit()
         self.editor.setVerticalScrollBar(ScrollBar(Qt.Vertical))
+        self.editor.setTabStopDistance(40)
+
+        print(self.editor.document().defaultStyleSheet())
+
+        ita = """em::after {
+  content: '';
+  padding: 10px;
+}"""
+
+        # self.editor.document().setDefaultStyleSheet(ita)
+
         # Setup the QTextEdit editor configuration
         # self.editor.setAutoFormatting(QTextEdit.AutoAll)
 
@@ -337,14 +348,18 @@ class MainWindow(QMainWindow):
         addAuthor_btn = QPushButton("Add Author")
         addAuthor_btn.clicked.connect(lambda: self.author_table.addAuthor())
 
+        resetFmt_btn = QPushButton("Reset Format")
+        resetFmt_btn.clicked.connect(lambda: self.editor.removeCharFormatSelection())
+
         dock_layout.addWidget(addAuthor_btn)
+        dock_layout.addWidget(resetFmt_btn)
 
         self.author_table.cellClicked.connect(self.table_selection_changed)
 
         self.addDockWidget(Qt.RightDockWidgetArea, dockwidget)
 
         # Initialize default font size.
-        font = QFont("iA Writer Quattro V Regular", 12)
+        font = QFont("Lexend", 12)
         self.editor.setFont(font)
         # We need to repeat the size to init the current format.
         self.editor.setFontPointSize(12)
@@ -474,7 +489,7 @@ class MainWindow(QMainWindow):
         else:
             self.path = path
             # Qt will automatically try and guess the format as txt/html
-            self.editor.setText(text)
+            self.editor.setHtml(text)
             self.update_title()
 
     def file_save(self):

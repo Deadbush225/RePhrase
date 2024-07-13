@@ -94,6 +94,9 @@ class TextEdit(QTextEdit):
         # self.textCharFormat.setBackground(Qt.red)
         self.textCharFormat.setFontWeight(75)
 
+        self.defaultCharFormat = QTextCharFormat()
+        self.defaultCharFormat.setFontWeight(100)
+
         self.images = {}
         self.DPM = floor(1 * 39.37)
 
@@ -222,7 +225,7 @@ class TextEdit(QTextEdit):
         self.textCursor().setCharFormat(self.textCharFormat)
 
     def removeCharFormatSelection(self):
-        pass
+        self.textCursor().setCharFormat(self.defaultCharFormat)
 
     def resizeEvent(self, e):
         # print(f"{self.document().idealWidth()} : {self.width()}")
