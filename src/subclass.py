@@ -10,6 +10,33 @@ import math
 
 floor = math.floor
 
+import traceback
+
+
+class AuthorEntry:
+    def __init__(self, author_name, color, background, weight, italic):
+        self.author_name = author_name
+        self.color = color
+        self.background = background
+        self.weight = weight
+        self.italic = italic
+
+    def getProperties(self) -> dict:
+        return {
+            "foreground": self.color,
+            "background": self.background,
+            "italic": self.italic,
+            "weight": self.weight,
+        }
+
+    def getStyleSheet(self) -> str:
+        return f"""
+            color: {self.color};
+            background: {self.background};
+            font-weight: {self.weight};
+            font-style: {"italic" if self.italic else ""};
+        """
+
 
 def hexuuid():
     return uuid.uuid4().hex
@@ -17,6 +44,74 @@ def hexuuid():
 
 def splitext(p):
     return os.path.splitext(p)[1].lower()
+
+
+class AddAuthorDialog(QDialog):
+
+    submit = pyqtSignal(AuthorEntry)
+
+    def __init__(self, author_name, foreground, background, italic, weight):
+        super(QDialog, self).__init__()
+
+        mainlayout = QVBoxLayout()
+
+        author_cont = QHBoxLayout()
+        author_cont.addWidget(QLabel("Author Name: "))
+        author_field = QLineEdit(author_name)
+        author_cont.addWidget(author_field)
+
+        foreground_cont = QHBoxLayout()
+        foreground_cont.addWidget(QLabel("Foreground: "))
+        self.colorPrev_foreground = ClickableLabel(foreground)
+        foreground_cont.addWidget(self.colorPrev_foreground)
+
+        background_cont = QHBoxLayout()
+        background_cont.addWidget(QLabel("Background: "))
+        self.colorPrev_background = ClickableLabel(background)
+        background_cont.addWidget(self.colorPrev_background)
+
+        weight_cont = QHBoxLayout()
+        weight_cont.addWidget(QLabel("Weight: "))
+        self.weight_spinbox = QSpinBox()
+        self.weight_spinbox.setMinimum(0)
+        self.weight_spinbox.setMaximum(100)
+        self.weight_spinbox.setSingleStep(1000)
+        self.weight_spinbox.setValue(weight)
+        weight_cont.addWidget(self.weight_spinbox)
+
+        formatting_cont = QHBoxLayout()
+        # self.isBold = QCheckBox("Bold")
+        self.isItalic = QCheckBox("Italic")
+        self.isItalic.setChecked(italic)
+        # formatting_cont.addWidget(self.isBold)
+        formatting_cont.addWidget(self.isItalic)
+
+        self.saveAuthor_btn = QPushButton("Save Author")
+
+        # close before adding lambda function
+        self.saveAuthor_btn.clicked.connect(lambda: self.fin())
+        # set author name
+
+        mainlayout.addLayout(author_cont)
+        mainlayout.addLayout(foreground_cont)
+        mainlayout.addLayout(background_cont)
+        mainlayout.addLayout(weight_cont)
+        mainlayout.addLayout(formatting_cont)
+        mainlayout.addWidget(self.saveAuthor_btn)
+
+        self.setLayout(mainlayout)
+
+    def fin(self):
+        self.done(QDialog.Accepted)
+        author_name = author_field.text()
+        color = self.colorPrev_foreground.color.name(QColor.HexArgb)
+        background = self.colorPrev_background.color.name(QColor.HexArgb)
+        weight = self.weight_spinbox.value()
+        italic = self.isItalic.isChecked()
+        rowNum = self.selectedRows()[0] if overrideRow else None
+
+        # todo: convert the addEntry def to accept AuthorEntry
+        self.submit.emit(AuthorEntry(author_name, color, background, weight, italic))
 
 
 class ScrollBar(QScrollBar):
@@ -168,19 +263,6 @@ class TextEdit(QTextEdit):
             # return
 
         super().insertFromMimeData(source)
-
-    # def s_formatChanged(self, e):
-    #     print("Format Changed")
-    #     # print("cursor Moved")
-    #     # if (not self.editor.textIsSelected):
-    #     # if e.fontWeight() == 75:
-    #     #     return
-    #     if self.cursor.selection().isEmpty():
-    #         self.setCurrentCharFormat(self.textCharFormat)
-    #         # self.setCharFormat(self.textCharFormat)
-
-    # def keyPressEvent(self, e):
-    #     self.setCurrentCharFormat(self.textCharFormat)
 
     def keyPressEvent(self, e):
         # print("KeyPressed")
@@ -369,7 +451,7 @@ class AuthorTable(QTableWidget):
                 self.author_dictionary.pop(author_name)
                 continue
 
-            self.addEntry(author_name, color, background, weight, italic)
+            self.addEntry(AuthorEntry(author_name, color, background, weight, italic))
             # output = f'<font color="{color}"; weight="{weight}";background-color="{background_color}">Test</font>'
 
             # author_table.setItem()
@@ -412,67 +494,13 @@ class AuthorTable(QTableWidget):
         # property_dict["italic"] = italic
         # property_dict["bold"] = bold
 
-        self.addAuthorWidget = QDialog()
-
-        mainlayout = QVBoxLayout()
-
-        author_cont = QHBoxLayout()
-        author_cont.addWidget(QLabel("Author Name: "))
-        author_field = QLineEdit(author_name)
-        author_cont.addWidget(author_field)
-
-        foreground_cont = QHBoxLayout()
-        foreground_cont.addWidget(QLabel("Foreground: "))
-        self.colorPrev_foreground = ClickableLabel(foreground)
-        foreground_cont.addWidget(self.colorPrev_foreground)
-
-        background_cont = QHBoxLayout()
-        background_cont.addWidget(QLabel("Background: "))
-        self.colorPrev_background = ClickableLabel(background)
-        background_cont.addWidget(self.colorPrev_background)
-
-        weight_cont = QHBoxLayout()
-        weight_cont.addWidget(QLabel("Weight: "))
-        self.weight_spinbox = QSpinBox()
-        self.weight_spinbox.setMinimum(0)
-        self.weight_spinbox.setMaximum(100)
-        self.weight_spinbox.setSingleStep(1000)
-        self.weight_spinbox.setValue(weight)
-        weight_cont.addWidget(self.weight_spinbox)
-
-        formatting_cont = QHBoxLayout()
-        # self.isBold = QCheckBox("Bold")
-        self.isItalic = QCheckBox("Italic")
-        self.isItalic.setChecked(italic)
-        # formatting_cont.addWidget(self.isBold)
-        formatting_cont.addWidget(self.isItalic)
-
-        self.saveAuthor_btn = QPushButton("Save Author")
-
-        # close before adding lambda function
-        self.saveAuthor_btn.clicked.connect(
-            lambda: (
-                self.addAuthorWidget.done(1),
-                self.addEntry(
-                    author_field.text(),
-                    self.colorPrev_foreground.color.name(QColor.HexArgb),
-                    self.colorPrev_background.color.name(QColor.HexArgb),
-                    self.weight_spinbox.value(),
-                    self.isItalic.isChecked(),
-                    self.selectedRows()[0] if overrideRow else None,
-                ),
-            )[-1]
+        self.addAuthorWidget = AddAuthorDialog(
+            author_name, foreground, background, italic, weight
         )
-        # set author name
-
-        mainlayout.addLayout(author_cont)
-        mainlayout.addLayout(foreground_cont)
-        mainlayout.addLayout(background_cont)
-        mainlayout.addLayout(weight_cont)
-        mainlayout.addLayout(formatting_cont)
-        mainlayout.addWidget(self.saveAuthor_btn)
-
-        self.addAuthorWidget.setLayout(mainlayout)
+        self.addAuthorWidget.accepted.connect(
+            lambda entry: self.addEntry(entry),
+        )
+        # self.addAuthorWidget.submit.connect(lambda x: print(x))
 
         self.addAuthorWidget.exec_()
 
@@ -483,12 +511,13 @@ class AuthorTable(QTableWidget):
 
     # self.addEntry(author_name, color, background, weight, italic)
 
-    def addEntry(self, author_name, color, background, weight, italic, row_count=None):
-        prop = {}
-        prop["foreground"] = color
-        prop["background"] = background
-        prop["italic"] = italic
-        prop["weight"] = weight
+    def addEntry(self, entry, row_count=None):
+        # def addEntry(self, author_name, color, background, weight, italic, row_count=None):
+        # prop = {}
+        # prop["foreground"] = color
+        # prop["background"] = background
+        # prop["italic"] = italic
+        # prop["weight"] = weight
 
         # self.addAuthorWidget.done(1)
 
@@ -496,7 +525,7 @@ class AuthorTable(QTableWidget):
             row_count = self.rowCount()
             self.insertRow(row_count)
 
-            self.author_dictionary[author_name] = prop
+            self.author_dictionary[entry.author_name] = entry.getProperties()
 
         elif row_count != None:
             print("ROW DEFINED: OVERRIDING")
@@ -508,10 +537,10 @@ class AuthorTable(QTableWidget):
             #     (key if key != old_name else author_name): value
             #     for (key, value) in self.author_dictionary.items()
             # }
-            self.author_dictionary[old_name] = prop
+            self.author_dictionary[old_name] = entry.getProperties()
 
         print("PROP")
-        print(prop)
+        print(entry.getProperties())
         print(self.author_dictionary)
 
         self.saveSettings()
@@ -528,17 +557,10 @@ class AuthorTable(QTableWidget):
         # else:
         #     row_count = self.rowCount()
 
-        self.setItem(row_count, 0, QTableWidgetItem(author_name))
+        self.setItem(row_count, 0, QTableWidgetItem(entry.author_name))
 
         signature_preview = QLabel("Test")
-        signature_preview.setStyleSheet(
-            f"""
-            color: {color};
-            background: {background};
-            font-weight: {weight};
-            font-style: {"italic" if italic else ""};
-        """
-        )
+        signature_preview.setStyleSheet(entry.getStyleSheet())
 
         self.setCellWidget(row_count, 1, signature_preview)
 
