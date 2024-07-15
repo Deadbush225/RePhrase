@@ -55,3 +55,6 @@ QDockWidget::float-button {
     /* padding-left: 1px; */
 }
 
+QTextEdit {
+    padding: 2px;
+}

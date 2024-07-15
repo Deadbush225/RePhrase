@@ -80,23 +80,28 @@ class AddAuthorDialog(QDialog):
         weight_cont.addWidget(self.weight_spinbox)
 
         formatting_cont = QHBoxLayout()
-        # self.isBold = QCheckBox("Bold")
         self.isItalic = QCheckBox("Italic")
         self.isItalic.setChecked(italic)
+        # self.isBold = QCheckBox("Bold")
         # formatting_cont.addWidget(self.isBold)
         formatting_cont.addWidget(self.isItalic)
+
+        href_cont = QHBoxLayout()
+        href_cont.addWidget(QLabel("Href: "))
+        href_field = QLineEdit()
+        href_cont.addWidget(href_field)
 
         self.saveAuthor_btn = QPushButton("Save Author")
 
         # close before adding lambda function
         self.saveAuthor_btn.clicked.connect(lambda: self.fin())
-        # set author name
 
         mainlayout.addLayout(author_cont)
         mainlayout.addLayout(foreground_cont)
         mainlayout.addLayout(background_cont)
         mainlayout.addLayout(weight_cont)
         mainlayout.addLayout(formatting_cont)
+        mainlayout.addLayout(href_cont)
         mainlayout.addWidget(self.saveAuthor_btn)
 
         self.setLayout(mainlayout)
@@ -110,7 +115,6 @@ class AddAuthorDialog(QDialog):
         italic = self.isItalic.isChecked()
         rowNum = self.selectedRows()[0] if overrideRow else None
 
-        # todo: convert the addEntry def to accept AuthorEntry
         self.submit.emit(AuthorEntry(author_name, color, background, weight, italic))
 
 

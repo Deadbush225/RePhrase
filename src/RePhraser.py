@@ -36,13 +36,6 @@ class MainWindow(QMainWindow):
 
         print(self.editor.document().defaultStyleSheet())
 
-        ita = """em::after {
-  content: '';
-  padding: 10px;
-}"""
-
-        # self.editor.document().setDefaultStyleSheet(ita)
-
         # Setup the QTextEdit editor configuration
         # self.editor.setAutoFormatting(QTextEdit.AutoAll)
 
@@ -64,6 +57,7 @@ class MainWindow(QMainWindow):
         # Uncomment to disable native menubar on Mac
         # self.menuBar().setNativeMenuBar(False)
 
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Toolbar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
         file_toolbar = QToolBar("File")
         file_toolbar.setIconSize(QSize(14, 14))
         self.addToolBar(file_toolbar)
@@ -201,9 +195,6 @@ class MainWindow(QMainWindow):
         )
         format_toolbar.addWidget(self.fontsize)
 
-        # print(Path("/images/edit-edit-bold.png").absolute())
-
-        # image = QImage(str(Path("/images/edit-edit-bold.png").absolute()))
         bold_image = QImage(os.path.join(basedir, "images", "edit-bold.png"))
         bold_image.invertPixels()
         bold_pixmap = QPixmap.fromImage(bold_image)
@@ -321,25 +312,17 @@ class MainWindow(QMainWindow):
             # We don't need to disable signals for alignment, as they are paragraph-wide.
         ]
 
-        # view_menu = QMenu()
-
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━ Dock Widget ━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
         dockwidget = QDockWidget("Change Author")
         dockwidget.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
-
         dockwidget.setMaximumWidth(176)
         dockwidget.setMinimumWidth(165)
 
         dock_innerContainer = QWidget()
-
         dockwidget.setWidget(dock_innerContainer)
-
         dock_layout = QVBoxLayout(dock_innerContainer)
 
-        # dock_layout.addWidget(QLabel("Select Author"))
-
         self.author_table = AuthorTable()
-
-        # author_table.addItems(["Author1", "Author2", "Author3", "Author4"])
         dock_layout.addWidget(self.author_table)
 
         addAuthor_btn = QPushButton("Add Author")
@@ -449,11 +432,7 @@ class MainWindow(QMainWindow):
         self.alignr_action.setChecked(self.editor.alignment() == Qt.AlignRight)
         self.alignj_action.setChecked(self.editor.alignment() == Qt.AlignJustify)
 
-        # self.cursor_moved()
-
         self.block_signals(self._format_actions, False)
-
-        # self.editor.textIsSelected = False
 
     def dialog_critical(self, s):
         dlg = QMessageBox(self)
@@ -489,7 +468,7 @@ class MainWindow(QMainWindow):
 
             self.editor.document().setDefaultStyleSheet(r"{}")
 
-            print(self.editor.document().defaultStyleSheet())
+            # print(self.editor.document().defaultStyleSheet())
 
             self.editor.setHtml(text)
             self.update_title()
@@ -564,15 +543,9 @@ if __name__ == "__main__":
     try:
         app = QApplication(sys.argv)
 
-        # qdarktheme.setup_theme("auto")
-
-        # app.setApplicationName("Megasolid Idiom")
-        # # setup stylesheet
-        # app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
-
         QApplication.setStyle("Fusion")
-        #
-        # # Now use a palette to switch to dark colors:
+
+        # Now use a palette to switch to dark colors:
         dark_palette = QPalette()
         dark_palette.setColor(QPalette.Window, QColor(53, 53, 53))
         dark_palette.setColor(QPalette.WindowText, Qt.white)
@@ -593,8 +566,6 @@ if __name__ == "__main__":
         dark_palette.setColor(QPalette.Disabled, QPalette.Text, Qt.darkGray)
         dark_palette.setColor(QPalette.Disabled, QPalette.Light, QColor(53, 53, 53))
         QApplication.setPalette(dark_palette)
-
-        # apply_stylesheet(app, theme='dark_teal.xml')
 
         # qdarktheme.enable_hi_dpi()
         # qdarktheme.setup_theme(
