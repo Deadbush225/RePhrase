@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>9</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>297</x>
+      <y>90</y>
+      <w>252</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>AuthorEntry
+--
+-author_name: str
+-color: str
+-background: str
+-weight: int
+-italic: bool
+--
++getProperties(): dict
++getStyleSheet(): str</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>135</x>
+      <y>252</y>
+      <w>252</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>AddAuthorDialog
+/(QDIalog)/
+--
+-&lt;&lt;signal&gt;&gt; submit(): AuthorEntry
+style=autoresize
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>378</x>
+      <y>207</y>
+      <w>45</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+</panel_attributes>
+    <additional_attributes>30.0;10.0;30.0;100.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>135</x>
+      <y>342</y>
+      <w>252</w>
+      <h>171</h>
+    </coordinates>
+    <panel_attributes>AuthorTable
+/(QTableWidget)/
+--
+-author_dictionary: dict
+--
++addAuthor(author_name="" str, overrideRow=False bool): void
++addEntry(entry AuthorEntry, row_count=None int)
+
+
+style=wordwrap</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>378</x>
+      <y>207</y>
+      <w>45</w>
+      <h>243</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+</panel_attributes>
+    <additional_attributes>30.0;10.0;30.0;250.0;10.0;250.0</additional_attributes>
+  </element>
+</diagram>

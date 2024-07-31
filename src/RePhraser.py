@@ -12,7 +12,12 @@ import re
 
 # from zipfile import ZipFile
 
-from subclass import *
+import traceback
+
+from lib.AuthorTable import AuthorTable
+from lib.ScrollBar import ScrollBar
+from lib.TextEdit import TextEdit
+from lib.helper import *
 
 floor = math.floor
 
