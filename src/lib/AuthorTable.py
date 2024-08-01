@@ -210,16 +210,6 @@ class AuthorTable(QTableWidget):
         self.addAuthorWidget.exec_()
 
     def addEntry(self, entry, row_count=None):
-        # todo: remove row_count dependency
-        # def addEntry(self, author_name, color, background, weight, italic, row_count=None):
-        # prop = {}
-        # prop["foreground"] = color
-        # prop["background"] = background
-        # prop["italic"] = italic
-        # prop["weight"] = weight
-
-        # self.addAuthorWidget.done(1)
-
         if row_count == None:
             row_count = self.rowCount()
             self.insertRow(row_count)
