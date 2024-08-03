@@ -69,6 +69,7 @@ class TextEdit(QTextEdit):
         super().__init__(parent=parent)
         self.parent_ = parent
         self.textIsSelected = False
+        self.dropped_text = ""
 
         print("PARENT of TEXTEDIT")
         print(self)
@@ -88,6 +89,13 @@ class TextEdit(QTextEdit):
         self.images = {}
         self.DPM = math.floor(1 * 39.37)
 
+    def dropEvent(self, event):
+        m = event.mimeData()
+        if m.hasText():
+            self.dropped_text = m.text()
+
+        super().dropEvent(event)
+
     def canInsertFromMimeData(self, source):
         if source.hasImage():
             return True
@@ -100,15 +108,19 @@ class TextEdit(QTextEdit):
         document = self.document()
 
         if source.hasText():
-            print(cursor.selectedText())
+            print(self.dropped_text)
             print(source.text())
-            # print(self.parent())
-            te = PasteFromAuthorDialog(parent=self)
-            te.author.connect(self.setTextCharFormat)
-            te.exec_()
+            print(self.dropped_text != source.text())
 
-            self.setCharFormatSelection()
-            self.textCursor().insertText(source.text(), self.textCharFormat)
+            if self.dropped_text != source.text():
+                te = PasteFromAuthorDialog(parent=self)
+                te.author.connect(self.setTextCharFormat)
+                te.exec_()
+
+                self.setCharFormatSelection()
+                self.textCursor().insertText(source.text(), self.textCharFormat)
+            else:
+                self.textCursor().insertHtml(source.html())
 
             return
 
