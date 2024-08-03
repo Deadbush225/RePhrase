@@ -1,14 +1,79 @@
-from PyQt5.QtWidgets import QTextEdit
-from PyQt5.QtGui import QTextCharFormat, QImage
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 
 from lib.helper import *
+from lib.Stores import store
+from lib.qt_helper import HLine
+
 import math
 
 
+class PasteFromAuthorDialog(QDialog):
+
+    author = pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.parent_ = parent
+
+        self.setWindowTitle("Paste as Author")
+
+        mainlayout = QVBoxLayout()
+
+        author_cont = QHBoxLayout()
+
+        self.author_cmbx = QComboBox()
+        self.fillComboBox()
+
+        # print("PARENT of AUTHOR DIALOG")
+        # print(self.parent())
+        # print(self.parent().parent())
+        # self.author_cmbx.addItems(
+        # list(self.parent().parent().author_table.author_dictionary.keys())
+        # )
+
+        author_cont.addWidget(QLabel("Existing Author: "))
+        author_cont.addWidget(self.author_cmbx)
+
+        self.saveAuthor_btn = QPushButton("Ok")
+        self.saveAuthor_btn.clicked.connect(lambda: self.fin())
+
+        self.newAuthor_btn = QPushButton("Add as new Author")
+        self.newAuthor_btn.clicked.connect(self.addNewAuthor)
+
+        # close before adding lambda function
+
+        mainlayout.addLayout(author_cont)
+        mainlayout.addWidget(self.saveAuthor_btn)
+        mainlayout.addWidget(HLine())
+        mainlayout.addWidget(self.newAuthor_btn)
+
+        self.setLayout(mainlayout)
+
+    def addNewAuthor(self):
+        self.parent_.parent_.author_table.addAuthor("")
+        self.fillComboBox()
+
+    def fillComboBox(self):
+        self.author_cmbx.clear()
+        self.author_cmbx.addItems(store.author_dictionary.keys())
+
+    def fin(self):
+        self.done(QDialog.Accepted)
+        self.author.emit(self.author_cmbx.currentText())
+
+
 class TextEdit(QTextEdit):
-    def __init__(self, *args, **kwargs):
-        super(QTextEdit, self).__init__(*args, **kwargs)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.parent_ = parent
         self.textIsSelected = False
+
+        print("PARENT of TEXTEDIT")
+        print(self)
+        print(self.parent())
+        # self.setParent(parent=parent)Z
 
         # Setting cursor's current character format
         self.textCharFormat = QTextCharFormat()
@@ -24,18 +89,32 @@ class TextEdit(QTextEdit):
         self.DPM = math.floor(1 * 39.37)
 
     def canInsertFromMimeData(self, source):
-
         if source.hasImage():
             return True
         else:
             return super(TextEdit, self).canInsertFromMimeData(source)
 
     def insertFromMimeData(self, source):
-
+        print("INSERT FROM MIME DATA")
         cursor = self.textCursor()
         document = self.document()
 
-        if source.hasUrls():
+        if source.hasText():
+            print(cursor.selectedText())
+            print(source.text())
+            # print(self.parent())
+            te = PasteFromAuthorDialog(parent=self)
+            te.author.connect(self.setTextCharFormat)
+            te.exec_()
+
+            self.setCharFormatSelection()
+            self.textCursor().insertText(source.text(), self.textCharFormat)
+
+            return
+
+            # print(source.text())
+
+        elif source.hasUrls():
             for u in source.urls():
                 file_ext = splitext(str(u.toLocalFile()))
                 if u.isLocalFile() and file_ext in IMAGE_EXTENSIONS:
@@ -131,6 +210,8 @@ class TextEdit(QTextEdit):
         print("SET CHAR FORMAT SELECTION")
         print(self.textCharFormat.fontWeight())
         print(self.textCharFormat.fontItalic())
+        print(self.textCharFormat.foreground())
+        print(self.textCharFormat.background())
 
         # self.textCharFormat.setFontWeight(100)
 
@@ -155,6 +236,15 @@ class TextEdit(QTextEdit):
 
     def removeCharFormatSelection(self):
         self.textCursor().setCharFormat(self.defaultCharFormat)
+
+    def setTextCharFormat(self, authorName):
+        prop = store.author_dictionary[authorName]
+        print(prop)
+
+        self.textCharFormat.setFontItalic(prop["italic"])
+        self.textCharFormat.setFontWeight(prop["weight"])
+        self.textCharFormat.setForeground(QColor(prop["foreground"]))
+        self.textCharFormat.setBackground(QColor(prop["background"]))
 
     def resizeEvent(self, e):
         # print(f"{self.document().idealWidth()} : {self.width()}")
@@ -212,7 +302,7 @@ class TextEdit(QTextEdit):
 
         # print(resource.value())
         sc_ImageResource = ImageResource.scaledToWidth(
-            floor(width), Qt.SmoothTransformation
+            math.floor(width), Qt.SmoothTransformation
         )
         # sc_resource.setDotsPerMeterX(self.DPM);
         # sc_resource.setDotsPerMeterY(self.DPM);

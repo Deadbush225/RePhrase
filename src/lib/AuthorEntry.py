@@ -1,4 +1,5 @@
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor
 
 # todo: use the Qt namespace colors
 
@@ -7,8 +8,8 @@ class AuthorEntry:
     def __init__(
         self,
         author_name="Default",
-        foreground="#ffffffff",
-        background="#00000000",
+        foreground=QColor(Qt.white),
+        background=QColor(Qt.darkGray),
         weight=100,
         italic=True,
         href="www.example.com",
@@ -38,6 +39,6 @@ class AuthorEntry:
         return f"""
             color: {self.foreground};
             background: {self.background};
-            font-weight: {self.weight};
+            font-weight: {self.weight * 8};
             font-style: {"italic" if self.italic else ""};
         """

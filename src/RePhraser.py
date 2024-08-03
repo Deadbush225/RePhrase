@@ -30,12 +30,14 @@ basedir = os.path.dirname(__file__)
 
 class MainWindow(QMainWindow):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowIcon(QIcon("RePhrase.png"))
 
         layout = QVBoxLayout()
 
-        self.editor = TextEdit()
+        self.editor = TextEdit(parent=self)
         self.editor.setVerticalScrollBar(ScrollBar(Qt.Vertical))
         self.editor.setTabStopDistance(40)
 
@@ -327,7 +329,7 @@ class MainWindow(QMainWindow):
         dockwidget.setWidget(dock_innerContainer)
         dock_layout = QVBoxLayout(dock_innerContainer)
 
-        self.author_table = AuthorTable()
+        self.author_table = AuthorTable(parent=self)
         dock_layout.addWidget(self.author_table)
 
         addAuthor_btn = QPushButton("Add Author")
@@ -339,7 +341,7 @@ class MainWindow(QMainWindow):
         dock_layout.addWidget(addAuthor_btn)
         dock_layout.addWidget(resetFmt_btn)
 
-        self.author_table.cellClicked.connect(self.table_selection_changed)
+        # self.author_table.cellClicked.connect(self.table_selection_changed)
 
         self.addDockWidget(Qt.RightDockWidgetArea, dockwidget)
 
@@ -383,26 +385,26 @@ class MainWindow(QMainWindow):
 
         self.setMinimumSize(QSize(780, 510))
 
-    def table_selection_changed(self):
-        print("SELECTION CHANGED")
-        selected_rows = {r.row() for r in self.author_table.selectedIndexes()}
+        # def table_selection_changed(self):
+        # print("SELECTION CHANGED")
+        # selected_rows = {r.row() for r in self.author_table.selectedIndexes()}
 
-        if len(selected_rows) != 1:
-            return
+        # if len(selected_rows) != 1:
+        #     return
 
-        print("CHANGING AUTHOR")
-        selected_row = list(selected_rows)[0]
+        # print("CHANGING AUTHOR")
+        # selected_row = list(selected_rows)[0]
 
-        author_name = self.author_table.item(selected_row, 0).text()
+        # author_name = self.author_table.item(selected_row, 0).text()
 
-        prop = self.author_table.author_dictionary[author_name]
-        print(prop)
+        # prop = self.author_table.author_dictionary[author_name]
+        # print(prop)
 
-        self.editor.textCharFormat.setFontItalic(prop["italic"])
-        self.editor.textCharFormat.setFontWeight(prop["weight"])
-        self.editor.textCharFormat.setForeground(QColor(prop["foreground"]))
-        self.editor.textCharFormat.setBackground(QColor(prop["background"]))
-        self.editor.setCharFormatSelection()
+        # self.editor.textCharFormat.setFontItalic(prop["italic"])
+        # self.editor.textCharFormat.setFontWeight(prop["weight"])
+        # self.editor.textCharFormat.setForeground(QColor(prop["foreground"]))
+        # self.editor.textCharFormat.setBackground(QColor(prop["background"]))
+        # self.editor.setCharFormatSelection()
 
     def refresh_stylesheet(self):
         qApp.setStyleSheet("".join(open(os.path.join(basedir, "dark.qss")).readlines()))

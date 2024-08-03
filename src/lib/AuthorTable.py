@@ -13,6 +13,7 @@ import sys
 
 from lib.ClickableLabel import ClickableLabel
 from lib.AuthorEntry import AuthorEntry
+from lib.Stores import store
 
 
 class AddAuthorDialog(QDialog):
@@ -119,57 +120,58 @@ class AddAuthorDialog(QDialog):
 
 
 class AuthorTable(QTableWidget):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.parent_ = parent
 
         self.settings = QSettings("DeadBush225", "RePhraser")
 
-        # self.author_dictionary = {}
-        self.author_dictionary = self.settings.value("authors")
+        # store.author_dictionary = {}
+        store.author_dictionary = self.settings.value("authors")
         # print(retrieved)
 
         self.setColumnCount(2)
         self.setHorizontalHeaderLabels(["Author", "Signature"])
         self.verticalHeader().hide()
-        # self.author_dictionary = author_dictionary
+        # store.author_dictionary = author_dictionary
 
-        if not self.author_dictionary:
-            self.author_dictionary = {
+        if not store.author_dictionary:
+            store.author_dictionary = {
                 "Ai": {
                     "italic": False,
                     "weight": 0,
-                    "foreground": "#fc3737",
-                    "background": "#fc6f37",
+                    "foreground": QColor("#fc3737"),
+                    "background": QColor("#fc6f37"),
                     "href": "WWW",
                 },
                 "ChatGPT": {
                     "italic": False,
                     "weight": 100,
-                    "foreground": "#3772fc",
-                    "background": "#53D85A",
+                    "foreground": QColor("#3772fc"),
+                    "background": QColor("#53D85A"),
                     "href": "AAA",
                 },
                 "Rhixie": {
                     "italic": True,
                     "weight": 0,
-                    "foreground": "#fcdb37",
-                    "background": "#9037fc",
+                    "foreground": QColor("#fcdb37"),
+                    "background": QColor("#9037fc"),
                     "href": "CCC",
                 },
             }
 
-        # print(self.author_dictionary)
-        keys = self.author_dictionary.keys()
+        # print(store.author_dictionary)
+        keys = store.author_dictionary.keys()
         for author_name in keys:
-            if not author_name in self.author_dictionary:
-                print(f"is '{author_name}' in {self.author_dictionary}?")
+            if not author_name in store.author_dictionary:
+                print(f"is '{author_name}' in {store.author_dictionary}?")
                 continue
 
             print("AUTHOR NAME")
-            print(self.author_dictionary[author_name])
+            print(store.author_dictionary[author_name])
 
             self.addEntry(
-                AuthorEntry(author_name, **self.author_dictionary[author_name])
+                AuthorEntry(author_name, **store.author_dictionary[author_name])
             )
 
         # self.author_table.resizeColumnsToContents()
@@ -185,22 +187,24 @@ class AuthorTable(QTableWidget):
             )
         )
 
-    def addAuthor(self, author_name, row_count=None):
+        self.cellClicked.connect(self.table_selection_changed)
+
+    def addAuthor(self, author_name="", row_count=None):
         print(f"ADDING AUTHOR: {author_name}")
 
         new_entry = AuthorEntry(author_name=author_name)
 
-        if row_count:
+        if row_count and author_name:  # `author_name` is just for error handling
             # color = Qt.white
             new_entry.foreground = QColor(
-                self.author_dictionary[author_name]["foreground"],
+                store.author_dictionary[author_name]["foreground"],
             )
             new_entry.background = QColor(
-                self.author_dictionary[author_name]["background"],
+                store.author_dictionary[author_name]["background"],
             )
-            new_entry.italic = self.author_dictionary[author_name]["italic"]
-            new_entry.weight = self.author_dictionary[author_name]["weight"]
-            new_entry.href = self.author_dictionary[author_name]["href"]
+            new_entry.italic = store.author_dictionary[author_name]["italic"]
+            new_entry.weight = store.author_dictionary[author_name]["weight"]
+            new_entry.href = store.author_dictionary[author_name]["href"]
 
         self.addAuthorWidget = AddAuthorDialog(new_entry, parent=self)
         self.addAuthorWidget.submit.connect(
@@ -214,7 +218,7 @@ class AuthorTable(QTableWidget):
             row_count = self.rowCount()
             self.insertRow(row_count)
 
-            self.author_dictionary[entry.author_name] = entry.getProperties()
+            store.author_dictionary[entry.author_name] = entry.getProperties()
 
         elif row_count != None:
             print("ROW DEFINED: OVERRIDING")
@@ -222,25 +226,25 @@ class AuthorTable(QTableWidget):
             # row is defined which means it is overriden
             # replace old name with new
             old_name = self.item(self.selectedRows()[0], 0).text()
-            # self.author_dictionary = {
+            # store.author_dictionary = {
             #     (key if key != old_name else author_name): value
-            #     for (key, value) in self.author_dictionary.items()
+            #     for (key, value) in store.author_dictionary.items()
             # }
-            self.author_dictionary[old_name] = entry.getProperties()
+            store.author_dictionary[old_name] = entry.getProperties()
 
         print("PROP")
         # print(entry.getProperties())
-        # print(self.author_dictionary)
+        # print(store.author_dictionary)
 
         self.saveSettings()
         # print(self.settings.value("authors"))
 
-        # if author_name in self.author_dictionary:
+        # if author_name in store.author_dictionary:
         #     # self.reDrawRow(author_name)
         #     row_count = self.selectedRows()[0]
         # else:
         # row_count = self.rowCount()
-        # if (self.selectedRows() and (author_name in self.author_dictionary)):
+        # if (self.selectedRows() and (author_name in store.author_dictionary)):
         # print("name already exists, override mode")
         #     row_count = self.selectedRows()[0]
         # else:
@@ -252,6 +256,25 @@ class AuthorTable(QTableWidget):
         signature_preview.setStyleSheet(entry.getStyleSheet())
 
         self.setCellWidget(row_count, 1, signature_preview)
+
+    def table_selection_changed(self):
+        print("SELECTION CHANGED")
+        selected_rows = {r.row() for r in self.selectedIndexes()}
+
+        if len(selected_rows) != 1:
+            return
+
+        print("CHANGING AUTHOR")
+        # print(self.parent())
+        selected_row = list(selected_rows)[0]
+
+        author_name = self.item(selected_row, 0).text()
+
+        # prop = store.author_dictionary[author_name]
+        # print(prop)
+
+        self.parent_.editor.setTextCharFormat(author_name)
+        self.parent_.editor.setCharFormatSelection()
 
     def mousePressEvent(self, e):
         super().mousePressEvent(e)
@@ -271,15 +294,15 @@ class AuthorTable(QTableWidget):
             print("TRYING TO DELETE")
             name = self.item(selected_row, 0).text()
             print(name)
-            print(self.author_dictionary)
+            print(store.author_dictionary)
 
-            self.author_dictionary.pop(name)
+            store.author_dictionary.pop(name)
             self.removeRow(selected_row)
 
             self.saveSettings()
 
     def saveSettings(self):
-        self.settings.setValue("authors", self.author_dictionary)
+        self.settings.setValue("authors", store.author_dictionary)
 
     # def reDrawRow(self, ):
     def selectedRows(self):
