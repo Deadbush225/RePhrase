@@ -69,7 +69,7 @@ class TextEdit(QTextEdit):
         super().__init__(parent=parent)
         self.parent_ = parent
         self.textIsSelected = False
-        self.dropped_text = ""
+        self.dropped_text = None
 
         print("PARENT of TEXTEDIT")
         print(self)
@@ -107,24 +107,73 @@ class TextEdit(QTextEdit):
         cursor = self.textCursor()
         document = self.document()
 
-        if source.hasText():
-            print(self.dropped_text)
-            print(source.text())
-            print(self.dropped_text != source.text())
+        if source.hasImage():
+            print("INSERTING IMAGE")
+            image = source.imageData()
+            # print(image.e)
+            # print(source.html())
+            # uuid = hexuuid()
 
-            if self.dropped_text != source.text():
+            uuid = self.addImageResource(image)
+
+            # self.images[uuid] = image
+
+            # image = image.scaledToWidth(75)
+
+            # width = image.width()
+            # height = image.height()
+            # print(f"{width} : {height}")
+
+            # text_area_width = self.width() - 32
+            # # text_area_width = self.document().idealWidth() # still not enough, clipping occurs
+
+            # # scaled_image = image
+            # # if width >= text_area_width:
+            # # conssider padding
+            # factor = text_area_width / width
+            # width *= factor
+            # height *= factor
+
+            # # image = image.scaledToWidth(
+            # #     math.floor(width), Qt.SmoothTransformation
+            # # )
+
+            # # scaled_image.setDotsPerMeterX(self.DPM);
+            # # scaled_image.setDotsPerMeterY(self.DPM);
+
+            # document.addResource(QTextDocument.ImageResource, QUrl(uuid), image)
+
+            # fragment = QTextDocumentFragment.fromHtml(
+            #     f"<img src='{source.text()}' height='{height}' width='{width}'></img>"
+            # )
+
+            # fragment = QTextDocumentFragment.fromHtml(
+            #     f"<img src='{uuid}' width='100px'</img>"
+            # )
+
+            # cursor.insertFragment(fragment)
+            self.setAlignment(Qt.AlignCenter)
+            cursor.insertImage(uuid)
+            # cursor.insertImage(uuid)
+            return
+
+        elif source.hasText():
+            # print(self.dropped_text)
+            # print(source.text())
+            # print(self.dropped_text != source.text())
+            selectedTextIsBeingDragged = self.dropped_text == source.text()
+
+            if not selectedTextIsBeingDragged:
                 te = PasteFromAuthorDialog(parent=self)
                 te.author.connect(self.setTextCharFormat)
                 te.exec_()
 
                 self.setCharFormatSelection()
                 self.textCursor().insertText(source.text(), self.textCharFormat)
-            else:
+            elif selectedTextIsBeingDragged:
                 self.textCursor().insertHtml(source.html())
 
             return
-
-            # print(source.text())
 
         elif source.hasUrls():
             for u in source.urls():
@@ -145,41 +194,6 @@ class TextEdit(QTextEdit):
             else:
                 # If all were valid images, finish here.
                 return
-
-        elif source.hasImage():
-            print("INSERTING IMAGE")
-            image = source.imageData()
-            # uuid = hexuuid()
-
-            uuid = self.addImageResource(image)
-
-            # self.images[uuid] = image
-
-            # width = image.width()
-            # height = image.height()
-
-            # text_area_width = self.width() - 32
-            # # text_area_width = self.document().idealWidth() # still not enough, clipping occurs
-
-            # scaled_image = image
-            # # if width >= text_area_width:
-            #     # conssider padding
-            # factor = text_area_width / width
-            # width *= factor
-            # height *= factor
-
-            # scaled_image = image.scaledToWidth(floor(width), Qt.SmoothTransformation)
-
-            # # scaled_image.setDotsPerMeterX(self.DPM);
-            # # scaled_image.setDotsPerMeterY(self.DPM);
-
-            # document.addResource(QTextDocument.ImageResource, QUrl(uuid), scaled_image)
-
-            # fragment = QTextDocumentFragment.fromHtml(f"<img src='{uuid}' height='{height}' width='{width}'></img>")
-
-            # cursor.insertFragment(fragment)
-            cursor.insertImage(uuid)
-            # return
 
         super().insertFromMimeData(source)
 
@@ -308,19 +322,34 @@ class TextEdit(QTextEdit):
         text_area_width = self.width() - 32
         # if width >= text_area_width:
         # conssider padding
-        factor = text_area_width / width
-        width *= factor
+        # factor = text_area_width / widthv <-
+        # width *= factor <-
         # height *= factor
 
         # print(resource.value())
-        sc_ImageResource = ImageResource.scaledToWidth(
-            math.floor(width), Qt.SmoothTransformation
-        )
+        # sc_ImageResource = ImageResource.scaledToWidth( <-
+        #     math.floor(width), Qt.SmoothTransformation
+        # )
         # sc_resource.setDotsPerMeterX(self.DPM);
         # sc_resource.setDotsPerMeterY(self.DPM);
 
+        image_name = f"{uuid}.png"
+
+        # ImageResource.
+        ImageResource.save(image_name)
+
         self.document().addResource(
-            QTextDocument.ImageResource, QUrl(uuid), sc_ImageResource
+            QTextDocument.ImageResource, QUrl(image_name), ImageResource
         )
 
-        return uuid
+        textImageFormat = QTextImageFormat()
+        textImageFormat.setName(image_name)
+        if width > text_area_width:
+            textImageFormat.setWidth(text_area_width)
+        else:
+            textImageFormat.setWidth(width)
+
+        # textImageFormat.setHeight(10)
+
+        return textImageFormat
+        # return uuid
