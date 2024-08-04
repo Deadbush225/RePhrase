@@ -8,7 +8,6 @@ import sys
 
 # import math
 
-
 # import traceback
 
 from lib.ClickableLabel import ClickableLabel
@@ -232,27 +231,15 @@ class AuthorTable(QTableWidget):
             # }
             store.author_dictionary[old_name] = entry.getProperties()
 
-        print("PROP")
         # print(entry.getProperties())
         # print(store.author_dictionary)
 
         self.saveSettings()
         # print(self.settings.value("authors"))
 
-        # if author_name in store.author_dictionary:
-        #     # self.reDrawRow(author_name)
-        #     row_count = self.selectedRows()[0]
-        # else:
-        # row_count = self.rowCount()
-        # if (self.selectedRows() and (author_name in store.author_dictionary)):
-        # print("name already exists, override mode")
-        #     row_count = self.selectedRows()[0]
-        # else:
-        #     row_count = self.rowCount()
-
         self.setItem(row_count, 0, QTableWidgetItem(entry.author_name))
 
-        signature_preview = QLabel("Test")
+        signature_preview = QLabel("Text")
         signature_preview.setStyleSheet(entry.getStyleSheet())
 
         self.setCellWidget(row_count, 1, signature_preview)
@@ -265,13 +252,9 @@ class AuthorTable(QTableWidget):
             return
 
         print("CHANGING AUTHOR")
-        # print(self.parent())
         selected_row = list(selected_rows)[0]
 
         author_name = self.item(selected_row, 0).text()
-
-        # prop = store.author_dictionary[author_name]
-        # print(prop)
 
         self.parent_.editor.setTextCharFormat(author_name)
         self.parent_.editor.setCharFormatSelection()
@@ -286,8 +269,6 @@ class AuthorTable(QTableWidget):
 
         selected_rows = self.selectedRows()
         # selected_rows.sort()
-
-        # print(selected_row)
 
         if len(selected_rows) == 1:
             selected_row = selected_rows[0]
@@ -304,6 +285,5 @@ class AuthorTable(QTableWidget):
     def saveSettings(self):
         self.settings.setValue("authors", store.author_dictionary)
 
-    # def reDrawRow(self, ):
     def selectedRows(self):
         return list(set([r.row() for r in self.selectedIndexes()]))

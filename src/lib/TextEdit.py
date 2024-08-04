@@ -16,7 +16,6 @@ class PasteFromAuthorDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.parent_ = parent
-
         self.setWindowTitle("Paste as Author")
 
         mainlayout = QVBoxLayout()
@@ -26,13 +25,6 @@ class PasteFromAuthorDialog(QDialog):
         self.author_cmbx = QComboBox()
         self.fillComboBox()
 
-        # print("PARENT of AUTHOR DIALOG")
-        # print(self.parent())
-        # print(self.parent().parent())
-        # self.author_cmbx.addItems(
-        # list(self.parent().parent().author_table.author_dictionary.keys())
-        # )
-
         author_cont.addWidget(QLabel("Existing Author: "))
         author_cont.addWidget(self.author_cmbx)
 
@@ -41,8 +33,6 @@ class PasteFromAuthorDialog(QDialog):
 
         self.newAuthor_btn = QPushButton("Add as new Author")
         self.newAuthor_btn.clicked.connect(self.addNewAuthor)
-
-        # close before adding lambda function
 
         mainlayout.addLayout(author_cont)
         mainlayout.addWidget(self.saveAuthor_btn)
@@ -71,20 +61,9 @@ class TextEdit(QTextEdit):
         self.textIsSelected = False
         self.dropped_text = None
 
-        print("PARENT of TEXTEDIT")
-        print(self)
-        print(self.parent())
-        # self.setParent(parent=parent)Z
-
-        # Setting cursor's current character format
         self.textCharFormat = QTextCharFormat()
-        # self.textCharFormat.setFontItalic(True)
-
-        # self.textCharFormat.setBackground(Qt.red)
-        # self.textCharFormat.setFontWeight(75)
 
         self.defaultCharFormat = QTextCharFormat()
-        # self.defaultCharFormat.setFontWeight(100)
 
         self.images = {}
         self.DPM = math.floor(1 * 39.37)
@@ -110,45 +89,10 @@ class TextEdit(QTextEdit):
         if source.hasImage():
             print("INSERTING IMAGE")
             image = source.imageData()
-            # print(image.e)
-            # print(source.html())
-            # uuid = hexuuid()
 
             uuid = self.addImageResource(image)
-
-            # self.images[uuid] = image
-
-            # image = image.scaledToWidth(75)
-
-            # width = image.width()
-            # height = image.height()
-            # print(f"{width} : {height}")
-
-            # text_area_width = self.width() - 32
-            # # text_area_width = self.document().idealWidth() # still not enough, clipping occurs
-
-            # # scaled_image = image
-            # # if width >= text_area_width:
-            # # conssider padding
-            # factor = text_area_width / width
-            # width *= factor
-            # height *= factor
-
-            # # image = image.scaledToWidth(
-            # #     math.floor(width), Qt.SmoothTransformation
-            # # )
-
-            # # scaled_image.setDotsPerMeterX(self.DPM);
-            # # scaled_image.setDotsPerMeterY(self.DPM);
-
-            # document.addResource(QTextDocument.ImageResource, QUrl(uuid), image)
-
             # fragment = QTextDocumentFragment.fromHtml(
             #     f"<img src='{source.text()}' height='{height}' width='{width}'></img>"
-            # )
-
-            # fragment = QTextDocumentFragment.fromHtml(
-            #     f"<img src='{uuid}' width='100px'</img>"
             # )
 
             # cursor.insertFragment(fragment)
@@ -158,9 +102,6 @@ class TextEdit(QTextEdit):
             return
 
         elif source.hasText():
-            # print(self.dropped_text)
-            # print(source.text())
-            # print(self.dropped_text != source.text())
             selectedTextIsBeingDragged = self.dropped_text == source.text()
 
             if not selectedTextIsBeingDragged:
@@ -198,18 +139,6 @@ class TextEdit(QTextEdit):
         super().insertFromMimeData(source)
 
     def keyPressEvent(self, e):
-        # print("KeyPressed")
-        # print(self.m_cursor)
-
-        # cursorIsEmpty = self.m_cursor.selection().isEmpty()
-
-        # if cursorIsEmpty:
-        #     self.setCurrentCharFormat(self.textCharFormat)
-        #         # self.setCharFormat(self.textCharFormat)
-        # elif not cursorIsEmpty:
-        #     self.m_cursor.deleteChar()
-        #     self.setCurrentCharFormat(self.textCharFormat)
-
         # if e.key() == Qt.Key_Backspace:
         #     self.textCursor().deletePreviousChar()
         #     return
@@ -226,38 +155,10 @@ class TextEdit(QTextEdit):
             print("ALPHANUMERIC")
             self.textCursor().insertText(e.text(), self.defaultCharFormat)
             return
-        # else:
 
         super().keyPressEvent(e)
 
-        # return
-
     def setCharFormatSelection(self):
-        print("SET CHAR FORMAT SELECTION")
-        print(self.textCharFormat.fontWeight())
-        print(self.textCharFormat.fontItalic())
-        print(self.textCharFormat.foreground())
-        print(self.textCharFormat.background())
-
-        # self.textCharFormat.setFontWeight(100)
-
-        # text = self.textCursor().selection().toPlainText()
-
-        # style = ""
-
-        # if self.textCharFormat.fontWeight() != self.defaultCharFormat.fontWeight():
-        #     style += f"font-weight:{self.textCharFormat.fontWeight() * 8};"
-        # if self.textCharFormat.fontItalic() != self.defaultCharFormat.fontItalic():
-        #     style += f"font-style:italic;margin-right:5px;"
-        # if self.textCharFormat.background() != self.defaultCharFormat.background():
-        #     style += f"background-color:{self.textCharFormat.background().color().name(QColor.HexArgb)};"
-        # if self.textCharFormat.foreground() != self.defaultCharFormat.foreground():
-        #     style += f"color:{self.textCharFormat.foreground().color().name(QColor.HexArgb)};"
-
-        # content = f'<span style="{style}">{text}</span>'
-
-        # self.textCursor().insertHtml(content)
-
         self.textCursor().setCharFormat(self.textCharFormat)
 
     def removeCharFormatSelection(self):
