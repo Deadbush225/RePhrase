@@ -193,18 +193,40 @@ class TextEdit(QTextEdit):
 
         #     cur_pos = found_cursor.position()
         # text_area_width = self.width() - 32
+
+        # self.removeUnusedResources()
+
+        print("TEXT RESIZE EVENT")
+        print(self.images)
+        for uuid in self.images.keys():
+            print(uuid)
+            img = self.images[uuid]
+            editorMaxWidth = self.width() - 32
+            print(f"{img.width()} vs. {editorMaxWidth}")
+
+            # if img.width() > editorMaxWidth:
+            print("resizing")
+            img.setWidth(editorMaxWidth)
+
+        super().resizeEvent(e)
+        # resize pictures to match the max width
+
+    def removeUnusedResources(self):
+        uuidToRemove = []
+
         for uuid in self.images.keys():
 
             resource = self.document().resource(QTextDocument.ImageResource, QUrl(uuid))
 
             if resource == None:
-                del self.images[uuid]
+                uuidToRemove.append(uuid)
+                # del self.images[uuid]
                 continue
 
-            self.addImageResource(self.images[uuid])
+            # self.addImageResource(self.images[uuid])
 
-        super().resizeEvent(e)
-        # resize pictures to match the max width
+        for uuid in uuidToRemove:
+            del self.images[uuid]
 
     def addImageResource(self, ImageResource: QImage, uuid=hexuuid()):
         # cases:
@@ -212,8 +234,6 @@ class TextEdit(QTextEdit):
         # local file draged: uuid = file path
         if uuid == "":
             raise ValueError("provided 'uuid' is empty")
-
-        self.images[uuid] = ImageResource
 
         print("INSERTING IMAGE")
 
@@ -250,7 +270,8 @@ class TextEdit(QTextEdit):
         else:
             textImageFormat.setWidth(width)
 
-        # textImageFormat.setHeight(10)
+        # self.images[uuid] = ImageResource
+        self.images[uuid] = textImageFormat
 
         return textImageFormat
         # return uuid
