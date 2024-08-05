@@ -35,27 +35,43 @@ class MainWindow(QMainWindow):
 
         self.setWindowIcon(QIcon("RePhrase.png"))
 
-        layout = QVBoxLayout()
+        # self.path holds the path of the currently open file.
+        # If none, we haven't got a file open yet (or creating new).
+        self.path = None
+
+        self.layout = QStackedLayout()
+
+        mandatoryFileOpenContainer = QWidget()
+
+        fileOpen_layout = QVBoxLayout()
+        fileOpen_layout.setAlignment(Qt.AlignCenter)
+
+        fileOpen_label = QLabel("Hey, Open a Project Folder first")
+        fileOpen_btn = QPushButton("Open Dir")
+        fileOpen_btn.clicked.connect(self.open_directory)
+
+        fileOpen_layout.addWidget(fileOpen_label)
+        fileOpen_layout.addWidget(fileOpen_btn)
+
+        mandatoryFileOpenContainer.setLayout(fileOpen_layout)
 
         self.editor = TextEdit(parent=self)
         self.editor.setVerticalScrollBar(ScrollBar(Qt.Vertical))
         self.editor.setTabStopDistance(40)
 
-        print(self.editor.document().defaultStyleSheet())
+        # print(self.editor.document().defaultStyleSheet())
 
         # Setup the QTextEdit editor configuration
         # self.editor.setAutoFormatting(QTextEdit.AutoAll)
 
-        # self.path holds the path of the currently open file.
-        # If none, we haven't got a file open yet (or creating new).
-        self.path = None
-
-        layout.addWidget(self.editor)
-        layout.setSpacing(0)
-        layout.setContentsMargins(5, 5, 5, 5)
+        self.layout.addWidget(mandatoryFileOpenContainer)
+        self.layout.addWidget(self.editor)
+        # layout.setSpacing(0)
+        # layout.setContentsMargins(5, 5, 5, 5)
 
         container = QWidget()
-        container.setLayout(layout)
+        container.setLayout(self.layout)
+
         self.setCentralWidget(container)
 
         self.status = QStatusBar()
@@ -440,6 +456,9 @@ class MainWindow(QMainWindow):
         self.alignj_action.setChecked(self.editor.alignment() == Qt.AlignJustify)
 
         self.block_signals(self._format_actions, False)
+
+    def open_directory(self):
+        self.layout.setCurrentWidget(self.editor)
 
     def dialog_critical(self, s):
         dlg = QMessageBox(self)

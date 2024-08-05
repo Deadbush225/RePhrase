@@ -57,6 +57,8 @@ class PasteFromAuthorDialog(QDialog):
 class TextEdit(QTextEdit):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        self.setMinimumWidth(600)
+
         self.parent_ = parent
         self.textIsSelected = False
         self.dropped_text = None
@@ -192,24 +194,28 @@ class TextEdit(QTextEdit):
         #     print(f"cur_pos: {cur_pos}")
 
         #     cur_pos = found_cursor.position()
-        # text_area_width = self.width() - 32
+        # maximumImageWidth = self.width() - 32
 
         # self.removeUnusedResources()
 
-        print("TEXT RESIZE EVENT")
-        print(self.images)
-        for uuid in self.images.keys():
-            print(uuid)
-            img = self.images[uuid]
-            editorMaxWidth = self.width() - 32
-            print(f"{img.width()} vs. {editorMaxWidth}")
+        # resize pictures to match the max width
+        # print("TEXT RESIZE EVENT")
+        # print(self.images)
+        # for uuid in self.images.keys():
+        #     print(uuid)
+        #     img = self.images[uuid]
+        #     # img = QTextImageFormat()
+        #     img.setName(uuid)
+        #     editorMaxWidth = self.width() - 32
+        #     print(f"before: {img.width()} vs. {editorMaxWidth}")
 
-            # if img.width() > editorMaxWidth:
-            print("resizing")
-            img.setWidth(editorMaxWidth)
+        #     # if img.width() > editorMaxWidth:
+        #     print("resizing")
+        #     print(f"before: {img.width()} vs. {editorMaxWidth}")
+        #     img.setWidth(editorMaxWidth)
+        # img.width()
 
         super().resizeEvent(e)
-        # resize pictures to match the max width
 
     def removeUnusedResources(self):
         uuidToRemove = []
@@ -237,20 +243,33 @@ class TextEdit(QTextEdit):
 
         print("INSERTING IMAGE")
 
-        width = ImageResource.width()
-        height = ImageResource.height()
-
-        text_area_width = self.width() - 32
-        # if width >= text_area_width:
+        maximumImageWidth = self.minimumWidth() - 32
+        maximumImageHeight = 400 - 32
+        print(maximumImageWidth)
+        # if width >= maximumImageWidth:
         # conssider padding
-        # factor = text_area_width / widthv <-
+        # factor = maximumImageWidth / widthv <-
         # width *= factor <-
         # height *= factor
 
         # print(resource.value())
-        # sc_ImageResource = ImageResource.scaledToWidth( <-
-        #     math.floor(width), Qt.SmoothTransformation
-        # )
+        width = ImageResource.width()
+
+        if width > maximumImageWidth:
+            print("SCALING TO WIDTH")
+            print(f"{width} : {maximumImageWidth}")
+            ImageResource = ImageResource.scaledToWidth(
+                math.floor(maximumImageWidth), Qt.SmoothTransformation
+            )
+
+        height = ImageResource.height()
+
+        if height > maximumImageHeight:
+            print("SCALING TO HEIGHT")
+            print(f"{height} : {maximumImageHeight}")
+            ImageResource = ImageResource.scaledToHeight(
+                math.floor(maximumImageHeight), Qt.SmoothTransformation
+            )
         # sc_resource.setDotsPerMeterX(self.DPM);
         # sc_resource.setDotsPerMeterY(self.DPM);
 
@@ -259,19 +278,19 @@ class TextEdit(QTextEdit):
         # ImageResource.
         ImageResource.save(image_name)
 
+        # textImageFormat = QTextImageFormat()
+        # textImageFormat.setName(image_name)
+        # if width > maximumImageWidth:
+        #     textImageFormat.setWidth(maximumImageWidth)
+        # else:
+        #     textImageFormat.setWidth(width)
+
         self.document().addResource(
             QTextDocument.ImageResource, QUrl(image_name), ImageResource
         )
 
-        textImageFormat = QTextImageFormat()
-        textImageFormat.setName(image_name)
-        if width > text_area_width:
-            textImageFormat.setWidth(text_area_width)
-        else:
-            textImageFormat.setWidth(width)
+        self.images[image_name] = ImageResource
+        # self.images[uuid] = textImageFormat
 
-        # self.images[uuid] = ImageResource
-        self.images[uuid] = textImageFormat
-
-        return textImageFormat
+        return image_name
         # return uuid
