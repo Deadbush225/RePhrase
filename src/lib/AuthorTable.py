@@ -159,7 +159,6 @@ class AuthorTable(QTableWidget):
                 },
             }
 
-        # print(store.author_dictionary)
         keys = store.author_dictionary.keys()
         for author_name in keys:
             if not author_name in store.author_dictionary:
@@ -194,7 +193,6 @@ class AuthorTable(QTableWidget):
         new_entry = AuthorEntry(author_name=author_name)
 
         if row_count and author_name:  # `author_name` is just for error handling
-            # color = Qt.white
             new_entry.foreground = QColor(
                 store.author_dictionary[author_name]["foreground"],
             )
@@ -230,9 +228,6 @@ class AuthorTable(QTableWidget):
             #     for (key, value) in store.author_dictionary.items()
             # }
             store.author_dictionary[old_name] = entry.getProperties()
-
-        # print(entry.getProperties())
-        # print(store.author_dictionary)
 
         self.saveSettings()
         # print(self.settings.value("authors"))

@@ -61,8 +61,6 @@ class MainWindow(QMainWindow):
         self.editor.setVerticalScrollBar(ScrollBar(Qt.Vertical))
         self.editor.setTabStopDistance(40)
 
-        # print(self.editor.document().defaultStyleSheet())
-
         # Setup the QTextEdit editor configuration
         # self.editor.setAutoFormatting(QTextEdit.AutoAll)
 
@@ -145,33 +143,7 @@ class MainWindow(QMainWindow):
             QCommonStyle()
         )  # to make the transparency work
 
-        # cursor = self.editor.textCursor()
-        # cursor.setCharFormat(textCharFormat)
-
-        # self.editor.setCurrentCharFormat(self.textCharFormat)
-
         self.setMinimumSize(QSize(780, 510))
-
-        # def table_selection_changed(self):
-        # print("SELECTION CHANGED")
-        # selected_rows = {r.row() for r in self.author_table.selectedIndexes()}
-
-        # if len(selected_rows) != 1:
-        #     return
-
-        # print("CHANGING AUTHOR")
-        # selected_row = list(selected_rows)[0]
-
-        # author_name = self.author_table.item(selected_row, 0).text()
-
-        # prop = self.author_table.author_dictionary[author_name]
-        # print(prop)
-
-        # self.editor.textCharFormat.setFontItalic(prop["italic"])
-        # self.editor.textCharFormat.setFontWeight(prop["weight"])
-        # self.editor.textCharFormat.setForeground(QColor(prop["foreground"]))
-        # self.editor.textCharFormat.setBackground(QColor(prop["background"]))
-        # self.editor.setCharFormatSelection()
 
     def refresh_stylesheet(self):
         qApp.setStyleSheet("".join(open(os.path.join(basedir, "dark.qss")).readlines()))
