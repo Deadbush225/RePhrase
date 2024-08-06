@@ -149,9 +149,8 @@ class MainWindow(QMainWindow):
         """
         Update the font format toolbar/actions when a new text selection is made. This is neccessary to keep
         toolbars/etc. in sync with the current edit state.
-        :return:
         """
-        # todo: this seem to be ineffective, much better if to change the pressed state in the firing of the shortcut
+        # todo: the current format in the toolbar doesn't represent the format of the selected text, but the format present in the cursor
 
         # self.editor.textIsSelected = True
 
@@ -167,11 +166,12 @@ class MainWindow(QMainWindow):
         charFormat = cursor.charFormat()
         blockFormat = cursor.blockFormat()
 
-        self.fontsize.setCurrentText(str(int(charFormat.fontPointSize())))
+        # todo: we don't need to update Font settings since we always override the inserted text with the default TextFormat
+        # self.fontsize.setCurrentText(str(int(charFormat.fontPointSize())))
 
-        self.italic_action.setChecked(charFormat.fontItalic())
-        self.underline_action.setChecked(charFormat.fontUnderline())
-        self.bold_action.setChecked(charFormat.fontWeight() == QFont.Bold)
+        # self.italic_action.setChecked(charFormat.fontItalic())
+        # self.underline_action.setChecked(charFormat.fontUnderline())
+        # self.bold_action.setChecked(charFormat.fontWeight() == 100)
 
         self.alignl_action.setChecked(blockFormat.alignment() == Qt.AlignLeft)
         self.alignc_action.setChecked(blockFormat.alignment() == Qt.AlignCenter)

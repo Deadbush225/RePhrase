@@ -186,6 +186,7 @@ class TextEdit(QTextEdit):
         if e.text().isalnum() or (e.text() == " "):
             print("ALPHANUMERIC")
             self.textCursor().insertText(e.text(), self.defaultCharFormat)
+            self.parent_.update_format()
             return
 
         super().keyPressEvent(e)
