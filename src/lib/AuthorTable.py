@@ -232,22 +232,26 @@ class AuthorTable(QTableWidget):
         self.saveSettings()
         # print(self.settings.value("authors"))
 
-        self.setItem(row_count, 0, QTableWidgetItem(entry.author_name))
+        textCell = QTableWidgetItem(entry.author_name)
+        textCell.setFlags(Qt.ItemIsSelectable)
+
+        self.setItem(row_count, 0, textCell)
 
         signature_preview = QLabel("Text")
         signature_preview.setStyleSheet(entry.getStyleSheet())
 
         self.setCellWidget(row_count, 1, signature_preview)
 
-    def table_selection_changed(self):
+    def table_selection_changed(self, row, col):
         print("SELECTION CHANGED")
-        selected_rows = {r.row() for r in self.selectedIndexes()}
+        # selected_rows = {r.row() for r in self.selectedIndexes()}
 
-        if len(selected_rows) != 1:
-            return
+        # if len(selected_rows) != 1:
+        #     return
 
-        print("CHANGING AUTHOR")
-        selected_row = list(selected_rows)[0]
+        # print("CHANGING AUTHOR")
+        # selected_row = list(selected_rows)[0]
+        selected_row = row
 
         author_name = self.item(selected_row, 0).text()
 
