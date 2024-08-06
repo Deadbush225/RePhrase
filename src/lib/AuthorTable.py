@@ -165,8 +165,8 @@ class AuthorTable(QTableWidget):
                 print(f"is '{author_name}' in {store.author_dictionary}?")
                 continue
 
-            print("AUTHOR NAME")
-            print(store.author_dictionary[author_name])
+            # print("AUTHOR NAME")
+            # print(store.author_dictionary[author_name])
 
             self.addEntry(
                 AuthorEntry(author_name, **store.author_dictionary[author_name])

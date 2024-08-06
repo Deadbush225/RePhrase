@@ -41,21 +41,23 @@ class MainWindow(QMainWindow):
         # If none, we haven't got a file open yet (or creating new).
         self.path = None
 
-        self.layout = QStackedLayout()
+        # self.layout = QStackedLayout()
+        self.layout = QVBoxLayout()
 
-        mandatoryFileOpenContainer = QWidget()
+        # mandatoryFileOpenContainer = QWidget()
 
-        fileOpen_layout = QVBoxLayout()
-        fileOpen_layout.setAlignment(Qt.AlignCenter)
+        # fileOpen_layout = QVBoxLayout()
+        # fileOpen_layout.setAlignment(Qt.AlignCenter)
 
-        fileOpen_label = QLabel("Hey, Open a Project Folder first")
-        fileOpen_btn = QPushButton("Open Dir")
-        fileOpen_btn.clicked.connect(self.open_directory)
+        # fileOpen_label = QLabel("Hey, Open a Project Folder first")
+        # fileOpen_btn = QPushButton("Open Dir")
+        # fileOpen_btn.clicked.connect(self.open_directory)
 
-        fileOpen_layout.addWidget(fileOpen_label)
-        fileOpen_layout.addWidget(fileOpen_btn)
+        # fileOpen_layout.addWidget(fileOpen_label)
+        # fileOpen_layout.addWidget(fileOpen_btn)
 
-        mandatoryFileOpenContainer.setLayout(fileOpen_layout)
+        # mandatoryFileOpenContainer.setLayout(fileOpen_layout)
+        # self.layout.addWidget(mandatoryFileOpenContainer)
 
         self.editor = TextEdit(parent=self)
         self.editor.setVerticalScrollBar(ScrollBar(Qt.Vertical))
@@ -64,7 +66,6 @@ class MainWindow(QMainWindow):
         # Setup the QTextEdit editor configuration
         # self.editor.setAutoFormatting(QTextEdit.AutoAll)
 
-        self.layout.addWidget(mandatoryFileOpenContainer)
         self.layout.addWidget(self.editor)
         # layout.setSpacing(0)
         # layout.setContentsMargins(5, 5, 5, 5)
@@ -116,18 +117,15 @@ class MainWindow(QMainWindow):
         # We need to repeat the size to init the current format.
         self.editor.setFontPointSize(12)
 
-        ### Initialize Contents
-        self.file_open(
-            os.path.join(os.path.dirname(os.path.dirname(__file__)), "test.html")
-        )
+        # ━━━━━━━━━━━━━━━━━━━━━━━ Initialize Contents ━━━━━━━━━━━━━━━━━━━━━━━ #
+        # self.file_open(
+        #     os.path.join(os.path.dirname(os.path.dirname(__file__)), "test.html")
+        # )
 
         # signals
         self.editor.selectionChanged.connect(self.update_format)
-        # self.editor.cursorPositionChanged.connect(self.cursor_moved)
-        # self.editor.currentCharFormatChanged.connect(self.editor.s_formatChanged)
-        # self.editor.selectionChanged.connect(self.editor.s_selectionChanged)
-        # self.editor.s_formatChanged(None)
 
+        # ━━━━━━━━━━━━━━━━━━━━━━━━ Refresh Stylesheet ━━━━━━━━━━━━━━━━━━━━━━━ #
         self.refresh_btn = QPushButton("Refresh stylesheet")
         self.refresh_btn.clicked.connect(self.refresh_stylesheet)
         dock_layout.addWidget(self.refresh_btn)
@@ -136,14 +134,8 @@ class MainWindow(QMainWindow):
         self.update_format()
         self.update_title()
         # self.cursor_moved()
-        self.show()
-
-        # print(self.editor.verticalScrollBar().styleSheet())
-        self.editor.verticalScrollBar().setStyle(
-            QCommonStyle()
-        )  # to make the transparency work
-
         self.setMinimumSize(QSize(780, 510))
+        self.show()
 
     def refresh_stylesheet(self):
         qApp.setStyleSheet("".join(open(os.path.join(basedir, "dark.qss")).readlines()))
@@ -245,7 +237,7 @@ class MainWindow(QMainWindow):
             self,
             "Save file",
             "",
-            "HTML documents (*.html);Text documents (*.txt);All files (*.*)",
+            "HTML documents (*.html)",
         )
 
         if not path:
@@ -267,7 +259,12 @@ class MainWindow(QMainWindow):
 
         else:
             self.path = path
+            splitPath = os.path.split(path)
+            self.dir = splitPath[0]
+            self.fullName = splitPath[1]
+            self.baseName = ".".join(self.fullName.split(".")[0:-1])
             self.update_title()
+            # ["t", "st", "st"].join("")
 
     def file_print(self):
         dlg = QPrintDialog()
@@ -276,15 +273,15 @@ class MainWindow(QMainWindow):
 
     def update_title(self):
         self.setWindowTitle(
-            "%s - RePhraser"
-            % (os.path.basename(self.path) if self.path else "Untitled")
+            "%s - RePhraser" % (self.fullName if self.path else "Untitled")
         )
 
     def edit_toggle_wrap(self):
         self.editor.setLineWrapMode(1 if self.editor.lineWrapMode() == 0 else 0)
 
     def closeEvent(self, e):
-        self.file_save()
+        if self.editor.toPlainText():
+            self.file_save()
 
 
 if __name__ == "__main__":

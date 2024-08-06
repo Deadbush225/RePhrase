@@ -57,7 +57,10 @@ class PasteFromAuthorDialog(QDialog):
 class TextEdit(QTextEdit):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.setMinimumWidth(600)
+
+        self.parent_ = parent
+
+        self.setMinimumWidth(580)
 
         self.parent_ = parent
         self.textIsSelected = False
@@ -70,6 +73,13 @@ class TextEdit(QTextEdit):
         self.images = {}
         self.DPM = math.floor(1 * 39.37)
 
+        # print(self.editor.verticalScrollBar().styleSheet())
+        self.verticalScrollBar().setStyle(
+            QCommonStyle()
+        )  # to make the transparency work
+
+        # self.setDisabled(True)
+
     def dropEvent(self, event):
         m = event.mimeData()
         if m.hasText():
@@ -79,6 +89,16 @@ class TextEdit(QTextEdit):
 
     def canInsertFromMimeData(self, source):
         if source.hasImage():
+            # print("I CAN INSERT IMAGE")
+            # print(self.parent().path)
+            # if not os.path.exist(self.parent().path):
+            #     self.parent().file_save()
+
+            # # todo: emit a signal indicating that we need to save first
+            # if os.path.exists(self.parent().path):
+            #     return True
+
+            # return False
             return True
         else:
             return super(TextEdit, self).canInsertFromMimeData(source)
@@ -89,6 +109,16 @@ class TextEdit(QTextEdit):
         document = self.document()
 
         if source.hasImage():
+            print("I CAN INSERT IMAGE")
+            print(self.parent_.path)
+            if self.parent_.path is None:
+                self.parent_.file_save()
+
+            # recheck after displaying save dialog
+            if (self.parent_.path is None) or (not os.path.exists(self.parent_.path)):
+                return
+                # return True
+
             print("INSERTING IMAGE")
             image = source.imageData()
 
@@ -273,7 +303,12 @@ class TextEdit(QTextEdit):
         # sc_resource.setDotsPerMeterX(self.DPM);
         # sc_resource.setDotsPerMeterY(self.DPM);
 
-        image_name = f"{uuid}.png"
+        resourcePath = f"{self.parent_.dir}/{self.parent_.baseName}"
+
+        if not os.path.exists(resourcePath):
+            os.mkdir(resourcePath)
+
+        image_name = f"{resourcePath}/{uuid}.png"
 
         # ImageResource.
         ImageResource.save(image_name)
