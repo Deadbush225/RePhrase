@@ -30,8 +30,8 @@ QDockWidget {
     /* border: 1px solid lightgray; */
     /* titlebar-close-icon: url(close.png);
     titlebar-normal-icon: url(undock.png); */
-    titlebar-close-icon: url(src/images/close.svg);
-    titlebar-normal-icon: url(src/images/minimize.svg);
+    titlebar-close-icon: url(:/icons/close.svg);
+    titlebar-normal-icon: url(:/icons/minimize.svg);
 }
 
 QDockWidget::title {

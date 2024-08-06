@@ -1,0 +1,29 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>arrow-continue.png</file>
+        <file>arrow-curve.png</file>
+        <file>arrow-curve-180-left.png</file>
+        <file>blue-folder-open-document.png</file>
+        <file>clipboard-paste-document-text.png</file>
+        <file>close.svg</file>
+        <file>disk.png</file>
+        <file>disk--pencil.png</file>
+        <file>document-copy.png</file>
+        <file>edit-alignment.png</file>
+        <file>edit-alignment-center.png</file>
+        <file>edit-alignment-justify.png</file>
+        <file>edit-alignment-right.png</file>
+        <file>edit-bold.png</file>
+        <file>edit-color.png</file>
+        <file>edit-italic.png</file>
+        <file>edit-list.png</file>
+        <file>edit-list-order.png</file>
+        <file>edit-underline.png</file>
+        <file>minimize.svg</file>
+        <file>printer.png</file>
+        <file>question.png</file>
+        <file>scissors.png</file>
+        <file>selection-input.png</file>
+        <file>ui-tab--plus.png</file>
+    </qresource>
+</RCC>
