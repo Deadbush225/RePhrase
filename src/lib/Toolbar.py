@@ -12,8 +12,6 @@ class Toolbar(QToolBar):
         super().__init__(*args, **kwargs)
         # print(self.parent())
 
-        # todo: basedir is not defined, pass it
-
         self.parent().addToolBar(self)
         self.setIconSize(QSize(14, 14))
         file_menu = self.parent().menuBar().addMenu("&File")
@@ -39,6 +37,7 @@ class Toolbar(QToolBar):
             "Save As...",
             self.parent(),
         )
+        saveas_file_action.setShortcut(QKeySequence.Save)
         saveas_file_action.setStatusTip("Save current page to specified file")
         saveas_file_action.triggered.connect(self.parent().file_saveas)
         file_menu.addAction(saveas_file_action)
@@ -235,7 +234,7 @@ class Toolbar(QToolBar):
         alignr_image = QImage(":/icons/edit-alignment-right.png")
 
         alignr_image.invertPixels()
-        alignr_pixmap = QPixmap.fromImage(alignc_image)
+        alignr_pixmap = QPixmap.fromImage(alignr_image)
 
         self.parent().alignr_action = QAction(
             QIcon(alignr_pixmap), "Align right", self.parent()

@@ -123,7 +123,7 @@ class MainWindow(QMainWindow):
         # )
 
         # signals
-        self.editor.selectionChanged.connect(self.update_format)
+        self.editor.selectionChanged.connect(self.update_format)  # <- toggle
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━ Refresh Stylesheet ━━━━━━━━━━━━━━━━━━━━━━━ #
         self.refresh_btn = QPushButton("Refresh stylesheet")
@@ -151,6 +151,8 @@ class MainWindow(QMainWindow):
         toolbars/etc. in sync with the current edit state.
         :return:
         """
+        # todo: this seem to be ineffective, much better if to change the pressed state in the firing of the shortcut
+
         # self.editor.textIsSelected = True
 
         # print("selection changed")
@@ -159,16 +161,22 @@ class MainWindow(QMainWindow):
 
         # self.fonts.setCurrentFont(self.editor.currentFont())
         # Nasty, but we get the font-size as a float but want it was an int
-        self.fontsize.setCurrentText(str(int(self.editor.fontPointSize())))
 
-        self.italic_action.setChecked(self.editor.fontItalic())
-        self.underline_action.setChecked(self.editor.fontUnderline())
-        self.bold_action.setChecked(self.editor.fontWeight() == QFont.Bold)
+        cursor = self.editor.textCursor()
+        # cursor.charFormat().fontPointSize()
+        charFormat = cursor.charFormat()
+        blockFormat = cursor.blockFormat()
 
-        self.alignl_action.setChecked(self.editor.alignment() == Qt.AlignLeft)
-        self.alignc_action.setChecked(self.editor.alignment() == Qt.AlignCenter)
-        self.alignr_action.setChecked(self.editor.alignment() == Qt.AlignRight)
-        self.alignj_action.setChecked(self.editor.alignment() == Qt.AlignJustify)
+        self.fontsize.setCurrentText(str(int(charFormat.fontPointSize())))
+
+        self.italic_action.setChecked(charFormat.fontItalic())
+        self.underline_action.setChecked(charFormat.fontUnderline())
+        self.bold_action.setChecked(charFormat.fontWeight() == QFont.Bold)
+
+        self.alignl_action.setChecked(blockFormat.alignment() == Qt.AlignLeft)
+        self.alignc_action.setChecked(blockFormat.alignment() == Qt.AlignCenter)
+        self.alignr_action.setChecked(blockFormat.alignment() == Qt.AlignRight)
+        self.alignj_action.setChecked(blockFormat.alignment() == Qt.AlignJustify)
 
         self.block_signals(self._format_actions, False)
 
@@ -190,7 +198,7 @@ class MainWindow(QMainWindow):
                 self,
                 "Open file",
                 "",
-                "HTML documents (*.html);;Text documents (*.txt);;All files (*.*)",
+                "HTML documents (*.html)",
             )
 
         print(path)
@@ -207,7 +215,7 @@ class MainWindow(QMainWindow):
             self.path = path
             # Qt will automatically try and guess the format as txt/html
 
-            self.editor.document().setDefaultStyleSheet(r"{}")
+            # self.editor.document().setDefaultStyleSheet(r"{}")
 
             # print(self.editor.document().defaultStyleSheet())
 
@@ -264,7 +272,6 @@ class MainWindow(QMainWindow):
             self.fullName = splitPath[1]
             self.baseName = ".".join(self.fullName.split(".")[0:-1])
             self.update_title()
-            # ["t", "st", "st"].join("")
 
     def file_print(self):
         dlg = QPrintDialog()
