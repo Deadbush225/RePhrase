@@ -19,7 +19,7 @@ from lib.ScrollBar import ScrollBar
 from lib.TextEdit import TextEdit
 from lib.helper import *
 from lib.Toolbar import Toolbar
-from lib.DarkPallete import DarkPallete
+from lib.DarkPallete import DarkPalette
 
 floor = math.floor
 

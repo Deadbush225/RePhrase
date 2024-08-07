@@ -1,8 +1,10 @@
-from PyQt5.QtGui import QPallete
+from PyQt5.QtGui import QPalette, QColor
+from PyQt5.QtCore import Qt
 
 
-class DarkPallete(QPallete):
+class DarkPalette(QPalette):
     def __init__(self):
+        super().__init__()
         self.setColor(QPalette.Window, QColor(53, 53, 53))
         self.setColor(QPalette.WindowText, Qt.white)
         self.setColor(QPalette.Base, QColor(35, 35, 35))
