@@ -83,7 +83,6 @@ class MainWindow(QMainWindow):
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Toolbar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
         file_toolbar = Toolbar("File", parent=self)
-        # file_toolbar = Toolbar("File", basedir, self)
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━ Dock Widget ━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
         dockwidget = QDockWidget("Change Author")
@@ -107,8 +106,6 @@ class MainWindow(QMainWindow):
         dock_layout.addWidget(addAuthor_btn)
         dock_layout.addWidget(resetFmt_btn)
 
-        # self.author_table.cellClicked.connect(self.table_selection_changed)
-
         self.addDockWidget(Qt.RightDockWidgetArea, dockwidget)
 
         # Initialize default font size.
@@ -122,7 +119,7 @@ class MainWindow(QMainWindow):
         # )
 
         # signals
-        self.editor.selectionChanged.connect(self.update_format)  # <- toggle
+        self.editor.selectionChanged.connect(self.update_format)
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━ Refresh Stylesheet ━━━━━━━━━━━━━━━━━━━━━━━ #
         self.refresh_btn = QPushButton("Refresh stylesheet")
@@ -132,7 +129,6 @@ class MainWindow(QMainWindow):
         # Initialize.
         self.update_format()
         self.update_title()
-        # self.cursor_moved()
         self.setMinimumSize(QSize(780, 510))
         self.show()
 
@@ -148,8 +144,9 @@ class MainWindow(QMainWindow):
         """
         Update the font format toolbar/actions when a new text selection is made. This is neccessary to keep
         toolbars/etc. in sync with the current edit state.
+
+        > the current format in the toolbar doesn't represent the format of the selected text, but the format present in the cursor
         """
-        # todo: the current format in the toolbar doesn't represent the format of the selected text, but the format present in the cursor
 
         # self.editor.textIsSelected = True
 
@@ -213,10 +210,6 @@ class MainWindow(QMainWindow):
         else:
             self.path = path
             # Qt will automatically try and guess the format as txt/html
-
-            # self.editor.document().setDefaultStyleSheet(r"{}")
-
-            # print(self.editor.document().defaultStyleSheet())
 
             self.editor.setHtml(text)
             self.update_title()
@@ -324,7 +317,6 @@ if __name__ == "__main__":
         #     custom_colors={"primary": "#D0BCFF", "background": "24273a", "statusBar.background": "24273a", "toolbar.background": "24273a", "background>title": "c5c2c5", "foreground": "c5cff5", "border": "#39394a"})
         # qdarktheme.stop_sync()
 
-        # app.setStyleSheet(Path("login.qss").read_text())
         app.setStyleSheet("".join(open(os.path.join(basedir, "dark.qss")).readlines()))
         # app.setWindowIcon(QIcon(os.path.join(basedir, "RePhraser.ico")))
 
@@ -342,5 +334,4 @@ if __name__ == "__main__":
 
         app.exec_()
     except Exception as e:
-        # print(e)
         print(traceback.format_exc())
