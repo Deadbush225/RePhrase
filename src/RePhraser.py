@@ -112,8 +112,7 @@ class MainWindow(QMainWindow):
         self.addDockWidget(Qt.RightDockWidgetArea, dockwidget)
 
         # Initialize default font size.
-        font = QFont("Lexend", 12)
-        self.editor.setFont(font)
+        # self.editor.setFont(font)
         # We need to repeat the size to init the current format.
         self.editor.setFontPointSize(12)
 

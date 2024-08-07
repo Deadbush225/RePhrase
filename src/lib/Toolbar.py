@@ -141,6 +141,9 @@ class Toolbar(QToolBar):
         self.parent().fonts.currentFontChanged.connect(
             self.parent().editor.setCurrentFont
         )
+        font = QFont("Lexend", 12)
+        self.parent().fonts.setCurrentFont(font)
+        self.parent().editor.setFont(font)
         format_toolbar.addWidget(self.parent().fonts)
 
         self.parent().fontsize = QComboBox()
