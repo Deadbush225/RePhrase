@@ -34,9 +34,11 @@ class PasteFromAuthorDialog(QDialog):
         self.newAuthor_btn = QPushButton("Add as new Author")
         self.newAuthor_btn.clicked.connect(self.addNewAuthor)
 
+        hline = HLine(parent=self)
+
         mainlayout.addLayout(author_cont)
         mainlayout.addWidget(self.saveAuthor_btn)
-        mainlayout.addWidget(HLine())
+        mainlayout.addWidget(hline)
         mainlayout.addWidget(self.newAuthor_btn)
 
         self.setLayout(mainlayout)

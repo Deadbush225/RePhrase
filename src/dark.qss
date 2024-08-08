@@ -62,3 +62,9 @@ QTextEdit {
     padding-bottom: 2px;
     background-color: #232323;
 }
+
+HLine { /* https://stackoverflow.com/a/41495895/15870976 */
+    border-top: 1px solid #212121;
+    border-bottom: 1px solid #4b4b4b;
+    max-height: 0px
+}

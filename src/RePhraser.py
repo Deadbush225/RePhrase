@@ -16,7 +16,7 @@ import traceback
 
 from lib.AuthorTable import AuthorTable
 from lib.ScrollBar import ScrollBar
-from lib.TextEdit import TextEdit
+from lib.TextEdit import TextEdit, PasteFromAuthorDialog
 from lib.helper import *
 from lib.Toolbar import Toolbar
 from lib.DarkPallete import DarkPalette
@@ -289,7 +289,8 @@ if __name__ == "__main__":
     try:
         app = QApplication(sys.argv)
 
-        QApplication.setStyle("Fusion")
+        fusion = QStyleFactory.create("Fusion")
+        QApplication.setStyle(fusion)
 
         # Now use a palette to switch to dark colors:
         dark_palette = DarkPalette()
@@ -303,6 +304,7 @@ if __name__ == "__main__":
         app.setStyleSheet("".join(open(os.path.join(basedir, "dark.qss")).readlines()))
         # app.setWindowIcon(QIcon(os.path.join(basedir, "RePhraser.ico")))
 
+        # window = PasteFromAuthorDialog()
         window = MainWindow()
         # window = QMainWindow()
         # lbl = QLabel("Test")
