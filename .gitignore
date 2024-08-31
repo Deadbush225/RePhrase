@@ -1,2 +1,6 @@
 DEL/
 src/__pycache__/
+*.uxf
+test/
+build/
+dist/
