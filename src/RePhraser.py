@@ -189,8 +189,9 @@ class MainWindow(QMainWindow):
     def file_open(self, path=""):
 
         print(path)
-        print(type(path))
-        if path == "":
+        # print(type(path))
+        if not path:
+            print("FIND THE FILE")
             path, _ = QFileDialog.getOpenFileName(
                 self,
                 "Open file",
@@ -199,7 +200,7 @@ class MainWindow(QMainWindow):
             )
 
         print(path)
-        print(type(path))
+        # print(type(path))
 
         try:
             with open(path, "r") as f:
@@ -213,7 +214,8 @@ class MainWindow(QMainWindow):
             # Qt will automatically try and guess the format as txt/html
 
             self.editor.setHtml(text)
-            self.update_title()
+            # self.update_title()
+            self.update_path(path)
 
     def file_save(self):
         if self.path is None:
@@ -259,17 +261,20 @@ class MainWindow(QMainWindow):
             self.dialog_critical(str(e))
 
         else:
-            self.path = path
-            splitPath = os.path.split(path)
-            self.dir = splitPath[0]
-            self.fullName = splitPath[1]
-            self.baseName = ".".join(self.fullName.split(".")[0:-1])
-            self.update_title()
+            self.update_path(path)
 
     def file_print(self):
         dlg = QPrintDialog()
         if dlg.exec_():
             self.editor.print_(dlg.printer())
+
+    def update_path(self, path):
+        self.path = path
+        splitPath = os.path.split(path)
+        self.dir = splitPath[0]
+        self.fullName = splitPath[1]
+        self.baseName = ".".join(self.fullName.split(".")[0:-1])
+        self.update_title()
 
     def update_title(self):
         self.setWindowTitle(
@@ -286,37 +291,37 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
 
-    try:
-        app = QApplication(sys.argv)
+    # try:
+    app = QApplication(sys.argv)
 
-        fusion = QStyleFactory.create("Fusion")
-        QApplication.setStyle(fusion)
+    fusion = QStyleFactory.create("Fusion")
+    QApplication.setStyle(fusion)
 
-        # Now use a palette to switch to dark colors:
-        dark_palette = DarkPalette()
-        QApplication.setPalette(dark_palette)
+    # Now use a palette to switch to dark colors:
+    dark_palette = DarkPalette()
+    QApplication.setPalette(dark_palette)
 
-        # qdarktheme.enable_hi_dpi()
-        # qdarktheme.setup_theme(
-        #     custom_colors={"primary": "#D0BCFF", "background": "24273a", "statusBar.background": "24273a", "toolbar.background": "24273a", "background>title": "c5c2c5", "foreground": "c5cff5", "border": "#39394a"})
-        # qdarktheme.stop_sync()
+    # qdarktheme.enable_hi_dpi()
+    # qdarktheme.setup_theme(
+    #     custom_colors={"primary": "#D0BCFF", "background": "24273a", "statusBar.background": "24273a", "toolbar.background": "24273a", "background>title": "c5c2c5", "foreground": "c5cff5", "border": "#39394a"})
+    # qdarktheme.stop_sync()
 
-        app.setStyleSheet("".join(open(os.path.join(basedir, "dark.qss")).readlines()))
-        # app.setWindowIcon(QIcon(os.path.join(basedir, "RePhraser.ico")))
+    app.setStyleSheet("".join(open(os.path.join(basedir, "dark.qss")).readlines()))
+    # app.setWindowIcon(QIcon(os.path.join(basedir, "RePhraser.ico")))
 
-        # window = PasteFromAuthorDialog()
-        window = MainWindow()
-        # window = QMainWindow()
-        # lbl = QLabel("Test")
-        # window.setCentralWidget(lbl)
-        window.show()
+    # window = PasteFromAuthorDialog()
+    window = MainWindow()
+    # window = QMainWindow()
+    # lbl = QLabel("Test")
+    # window.setCentralWidget(lbl)
+    window.show()
 
-        # customTitlebarWindow = CustomTitlebarWindow(window)
-        # customTitlebarWindow.setTopTitleBar(icon_filename='dark-notepad.svg')
-        # # customTitlebarWindow.setButtonHint(['close'])
-        # customTitlebarWindow.setButtons()
-        # customTitlebarWindow.show()
+    # customTitlebarWindow = CustomTitlebarWindow(window)
+    # customTitlebarWindow.setTopTitleBar(icon_filename='dark-notepad.svg')
+    # # customTitlebarWindow.setButtonHint(['close'])
+    # customTitlebarWindow.setButtons()
+    # customTitlebarWindow.show()
 
-        app.exec_()
-    except Exception as e:
-        print(traceback.format_exc())
+    app.exec_()
+# except Exception as e:
+#     print(traceback.format_exc())
