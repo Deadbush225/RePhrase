@@ -34,4 +34,5 @@ Homepage = "https://github.com/Deadbush225/RePhrase"
 # # installed, specify them here.
 # package-data = { "rephraser" = ["*.png"] }
 [tool.setuptools.package-data]
-"*" = ["*.png"]
+"*" = ["*.png", "*.ico"]
+"rephraser" = ["*.qss"]
