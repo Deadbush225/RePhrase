@@ -30,8 +30,8 @@ floor = math.floor
 IMAGE_EXTENSIONS = [".jpg", ".png", ".bmp"]
 HTML_EXTENSIONS = [".htm", ".html"]
 
-old_basedir = os.path.dirname(__file__)
-print(old_basedir)
+# old_basedir = os.path.dirname(__file__)
+# print(old_basedir)
 
 
 class MainWindow(QMainWindow):
@@ -39,7 +39,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowIcon(QIcon("RePhrase.png"))
+        self.setWindowIcon(QIcon(os.path.join(basedir, "RePhrase.png")))
 
         # self.path holds the path of the currently open file.
         # If none, we haven't got a file open yet (or creating new).
