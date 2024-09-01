@@ -10,9 +10,9 @@ import sys
 
 # import traceback
 
-from lib.ClickableLabel import ClickableLabel
-from lib.AuthorEntry import AuthorEntry
-from lib.Stores import store
+from ..lib.ClickableLabel import ClickableLabel
+from ..lib.AuthorEntry import AuthorEntry
+from ..lib.Stores import store
 
 
 class AddAuthorDialog(QDialog):

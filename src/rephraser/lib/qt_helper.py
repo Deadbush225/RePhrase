@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-from lib.DarkPallete import DarkPalette
+from rephraser.lib.DarkPallete import DarkPalette
 
 
 class HLine(QFrame):

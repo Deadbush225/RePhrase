@@ -2,9 +2,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from lib.helper import *
-from lib.Stores import store
-from lib.qt_helper import HLine
+from rephraser.lib.helper import *
+from rephraser.lib.Stores import store
+from rephraser.lib.qt_helper import HLine
 
 import math
 

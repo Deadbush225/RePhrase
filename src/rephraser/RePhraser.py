@@ -14,21 +14,24 @@ import re
 
 import traceback
 
-from lib.AuthorTable import AuthorTable
-from lib.ScrollBar import ScrollBar
-from lib.TextEdit import TextEdit, PasteFromAuthorDialog
-from lib.helper import *
-from lib.Toolbar import Toolbar
-from lib.DarkPallete import DarkPalette
+from rephraser.lib.AuthorTable import AuthorTable
+from rephraser.lib.ScrollBar import ScrollBar
+from rephraser.lib.TextEdit import TextEdit, PasteFromAuthorDialog
+from rephraser.lib.helper import *
+from rephraser.lib.Toolbar import Toolbar
+from rephraser.lib.DarkPallete import DarkPalette
+
+from rephraser import basedir
+
+import rephraser.images.images
 
 floor = math.floor
 
 IMAGE_EXTENSIONS = [".jpg", ".png", ".bmp"]
 HTML_EXTENSIONS = [".htm", ".html"]
 
-basedir = os.path.dirname(__file__)
-
-import images.images
+old_basedir = os.path.dirname(__file__)
+print(old_basedir)
 
 
 class MainWindow(QMainWindow):
@@ -287,41 +290,3 @@ class MainWindow(QMainWindow):
     def closeEvent(self, e):
         if self.editor.toPlainText():
             self.file_save()
-
-
-if __name__ == "__main__":
-
-    # try:
-    app = QApplication(sys.argv)
-
-    fusion = QStyleFactory.create("Fusion")
-    QApplication.setStyle(fusion)
-
-    # Now use a palette to switch to dark colors:
-    dark_palette = DarkPalette()
-    QApplication.setPalette(dark_palette)
-
-    # qdarktheme.enable_hi_dpi()
-    # qdarktheme.setup_theme(
-    #     custom_colors={"primary": "#D0BCFF", "background": "24273a", "statusBar.background": "24273a", "toolbar.background": "24273a", "background>title": "c5c2c5", "foreground": "c5cff5", "border": "#39394a"})
-    # qdarktheme.stop_sync()
-
-    app.setStyleSheet("".join(open(os.path.join(basedir, "dark.qss")).readlines()))
-    # app.setWindowIcon(QIcon(os.path.join(basedir, "RePhraser.ico")))
-
-    # window = PasteFromAuthorDialog()
-    window = MainWindow()
-    # window = QMainWindow()
-    # lbl = QLabel("Test")
-    # window.setCentralWidget(lbl)
-    window.show()
-
-    # customTitlebarWindow = CustomTitlebarWindow(window)
-    # customTitlebarWindow.setTopTitleBar(icon_filename='dark-notepad.svg')
-    # # customTitlebarWindow.setButtonHint(['close'])
-    # customTitlebarWindow.setButtons()
-    # customTitlebarWindow.show()
-
-    app.exec_()
-# except Exception as e:
-#     print(traceback.format_exc())
