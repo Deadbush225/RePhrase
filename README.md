@@ -21,6 +21,14 @@ Requirements:
 pip install --upgrade git+https://github.com/Deadbush225/RePhrase
 ```
 
+## Usage:
+
+> Go to any terminal and run:
+
+```
+python -m rephraser
+```
+
 ## Other licenses
 
 Icons used in the application are by [Yusuke Kamiyaman](http://p.yusukekamiyamane.com/).
